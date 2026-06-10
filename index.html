@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Aula de Banco de Dados — Controle de Compras e Vendas</title>
+<title>Aula de Banco de Dados - Controle de Compras e Vendas</title>
 <style>
 :root{
   --bg:#07111f;
@@ -60,7 +60,7 @@ p{font-size:23px;line-height:1.42;color:var(--muted);margin:0 0 16px}.lead{font-
 </section>
 
 <section class="slide">
-  <h2>Cronograma da aula — 2 horas</h2>
+  <h2>Cronograma da aula - 2 horas</h2>
   <div class="row">
     <div class="card blue">
       <h3>1º horário</h3>
@@ -138,7 +138,7 @@ p{font-size:23px;line-height:1.42;color:var(--muted);margin:0 0 16px}.lead{font-
 </section>
 
 <section class="slide">
-  <h2>Atividade 1 — Criar o banco de dados</h2>
+  <h2>Atividade 1 - Criar o banco de dados</h2>
   <div class="card accent"><p class="task-box">Crie um banco de dados chamado <b>comercio_fic_pronatec</b> e selecione esse banco para uso.</p></div>
   <ul>
     <li>Use o comando de criação de banco.</li>
@@ -147,13 +147,13 @@ p{font-size:23px;line-height:1.42;color:var(--muted);margin:0 0 16px}.lead{font-
 </section>
 
 <section class="slide compact">
-  <h2>Resposta 1 — Criar o banco de dados</h2>
+  <h2>Resposta 1 - Criar o banco de dados</h2>
   <div class="code-wrap"><button class="copy">Copiar</button><pre><code>CREATE DATABASE comercio_fic_pronatec;
 USE comercio_fic_pronatec;</code></pre></div>
 </section>
 
 <section class="slide">
-  <h2>Atividade 2 — Criar a tabela de clientes</h2>
+  <h2>Atividade 2 - Criar a tabela de clientes</h2>
   <div class="card accent"><p class="task-box">Crie a tabela <b>cliente</b> para armazenar os dados das pessoas que compram no comércio.</p></div>
   <ul>
     <li>Inclua código do cliente como chave primária.</li>
@@ -163,7 +163,7 @@ USE comercio_fic_pronatec;</code></pre></div>
 </section>
 
 <section class="slide compact">
-  <h2>Resposta 2 — Tabela cliente</h2>
+  <h2>Resposta 2 - Tabela cliente</h2>
   <div class="code-wrap"><button class="copy">Copiar</button><pre><code>CREATE TABLE cliente (
     id_cliente INT PRIMARY KEY AUTO_INCREMENT,
     nome VARCHAR(150) NOT NULL,
@@ -176,7 +176,7 @@ USE comercio_fic_pronatec;</code></pre></div>
 </section>
 
 <section class="slide">
-  <h2>Atividade 3 — Criar a tabela de fornecedores</h2>
+  <h2>Atividade 3 - Criar a tabela de fornecedores</h2>
   <div class="card accent"><p class="task-box">Crie a tabela <b>fornecedor</b> para guardar os dados das empresas que fornecem produtos ao comércio.</p></div>
   <ul>
     <li>Inclua código do fornecedor como chave primária.</li>
@@ -186,7 +186,7 @@ USE comercio_fic_pronatec;</code></pre></div>
 </section>
 
 <section class="slide compact">
-  <h2>Resposta 3 — Tabela fornecedor</h2>
+  <h2>Resposta 3 - Tabela fornecedor</h2>
   <div class="code-wrap"><button class="copy">Copiar</button><pre><code>CREATE TABLE fornecedor (
     id_fornecedor INT PRIMARY KEY AUTO_INCREMENT,
     razao_social VARCHAR(150) NOT NULL,
@@ -199,7 +199,7 @@ USE comercio_fic_pronatec;</code></pre></div>
 </section>
 
 <section class="slide">
-  <h2>Atividade 4 — Criar a tabela de categorias</h2>
+  <h2>Atividade 4 - Criar a tabela de categorias</h2>
   <div class="card accent"><p class="task-box">Crie a tabela <b>categoria</b> para classificar os produtos vendidos no comércio.</p></div>
   <ul>
     <li>Inclua código da categoria como chave primária.</li>
@@ -208,7 +208,7 @@ USE comercio_fic_pronatec;</code></pre></div>
 </section>
 
 <section class="slide compact">
-  <h2>Resposta 4 — Tabela categoria</h2>
+  <h2>Resposta 4 - Tabela categoria</h2>
   <div class="code-wrap"><button class="copy">Copiar</button><pre><code>CREATE TABLE categoria (
     id_categoria INT PRIMARY KEY AUTO_INCREMENT,
     nome_categoria VARCHAR(100) NOT NULL,
@@ -217,7 +217,7 @@ USE comercio_fic_pronatec;</code></pre></div>
 </section>
 
 <section class="slide">
-  <h2>Atividade 5 — Criar a tabela de produtos</h2>
+  <h2>Atividade 5 - Criar a tabela de produtos</h2>
   <div class="card accent"><p class="task-box">Crie a tabela <b>produto</b> e relacione cada produto com uma categoria.</p></div>
   <ul>
     <li>Inclua código do produto como chave primária.</li>
@@ -227,7 +227,7 @@ USE comercio_fic_pronatec;</code></pre></div>
 </section>
 
 <section class="slide compact">
-  <h2>Resposta 5 — Tabela produto</h2>
+  <h2>Resposta 5 - Tabela produto</h2>
   <div class="code-wrap"><button class="copy">Copiar</button><pre><code>CREATE TABLE produto (
     id_produto INT PRIMARY KEY AUTO_INCREMENT,
     nome_produto VARCHAR(150) NOT NULL,
@@ -246,7 +246,7 @@ USE comercio_fic_pronatec;</code></pre></div>
 </section>
 
 <section class="slide">
-  <h2>Atividade 6 — Criar a tabela de vendas</h2>
+  <h2>Atividade 6 - Criar a tabela de vendas</h2>
   <div class="card accent"><p class="task-box">Crie a tabela <b>venda</b> para registrar as vendas realizadas para os clientes.</p></div>
   <ul>
     <li>Inclua código da venda como chave primária.</li>
@@ -256,7 +256,7 @@ USE comercio_fic_pronatec;</code></pre></div>
 </section>
 
 <section class="slide compact">
-  <h2>Resposta 6 — Tabela venda</h2>
+  <h2>Resposta 6 - Tabela venda</h2>
   <div class="code-wrap"><button class="copy">Copiar</button><pre><code>CREATE TABLE venda (
     id_venda INT PRIMARY KEY AUTO_INCREMENT,
     id_cliente INT NOT NULL,
@@ -272,7 +272,7 @@ USE comercio_fic_pronatec;</code></pre></div>
 </section>
 
 <section class="slide">
-  <h2>Atividade 7 — Criar a tabela de itens da venda</h2>
+  <h2>Atividade 7 - Criar a tabela de itens da venda</h2>
   <div class="card accent"><p class="task-box">Crie a tabela <b>item_venda</b> para detalhar quais produtos foram vendidos em cada venda.</p></div>
   <ul>
     <li>Relacione o item com a venda.</li>
@@ -282,7 +282,7 @@ USE comercio_fic_pronatec;</code></pre></div>
 </section>
 
 <section class="slide compact">
-  <h2>Resposta 7 — Tabela item_venda</h2>
+  <h2>Resposta 7 - Tabela item_venda</h2>
   <div class="code-wrap"><button class="copy">Copiar</button><pre><code>CREATE TABLE item_venda (
     id_item_venda INT PRIMARY KEY AUTO_INCREMENT,
     id_venda INT NOT NULL,
@@ -303,7 +303,7 @@ USE comercio_fic_pronatec;</code></pre></div>
 </section>
 
 <section class="slide">
-  <h2>Pausa de revisão — final do 1º horário</h2>
+  <h2>Pausa de revisão - final do 1º horário</h2>
   <div class="row3">
     <div class="card"><h3>Banco criado</h3><p>O MySQL já sabe onde os dados serão armazenados.</p></div>
     <div class="card"><h3>Tabelas criadas</h3><p>Cada tabela representa um assunto do comércio.</p></div>
@@ -313,7 +313,7 @@ USE comercio_fic_pronatec;</code></pre></div>
 </section>
 
 <section class="slide">
-  <h2>Atividade 8 — Inserir categorias</h2>
+  <h2>Atividade 8 - Inserir categorias</h2>
   <div class="card accent"><p class="task-box">Insira categorias básicas para organizar os produtos do comércio.</p></div>
   <ul>
     <li>Alimentos</li>
@@ -325,7 +325,7 @@ USE comercio_fic_pronatec;</code></pre></div>
 </section>
 
 <section class="slide compact">
-  <h2>Resposta 8 — Inserir categorias</h2>
+  <h2>Resposta 8 - Inserir categorias</h2>
   <div class="code-wrap"><button class="copy">Copiar</button><pre><code>INSERT INTO categoria
 (nome_categoria, descricao)
 VALUES
@@ -337,7 +337,7 @@ VALUES
 </section>
 
 <section class="slide">
-  <h2>Atividade 9 — Inserir clientes</h2>
+  <h2>Atividade 9 - Inserir clientes</h2>
   <div class="card accent"><p class="task-box">Insira alguns clientes para que seja possível registrar vendas.</p></div>
   <ul>
     <li>Cadastre pelo menos 5 clientes.</li>
@@ -347,7 +347,7 @@ VALUES
 </section>
 
 <section class="slide compact">
-  <h2>Resposta 9 — Inserir clientes</h2>
+  <h2>Resposta 9 - Inserir clientes</h2>
   <div class="code-wrap"><button class="copy">Copiar</button><pre><code>INSERT INTO cliente
 (nome, cpf, telefone, email, cidade)
 VALUES
@@ -359,7 +359,7 @@ VALUES
 </section>
 
 <section class="slide">
-  <h2>Atividade 10 — Inserir produtos</h2>
+  <h2>Atividade 10 - Inserir produtos</h2>
   <div class="card accent"><p class="task-box">Insira produtos relacionados às categorias cadastradas.</p></div>
   <ul>
     <li>Cada produto deve apontar para uma categoria existente.</li>
@@ -368,7 +368,7 @@ VALUES
 </section>
 
 <section class="slide compact">
-  <h2>Resposta 10 — Inserir produtos</h2>
+  <h2>Resposta 10 - Inserir produtos</h2>
   <div class="code-wrap"><button class="copy">Copiar</button><pre><code>INSERT INTO produto
 (nome_produto, codigo_barras, id_categoria, preco_custo, preco_venda, estoque_atual, estoque_minimo, ativo)
 VALUES
@@ -383,7 +383,7 @@ VALUES
 </section>
 
 <section class="slide">
-  <h2>Atividade 11 — Inserir vendas</h2>
+  <h2>Atividade 11 - Inserir vendas</h2>
   <div class="card accent"><p class="task-box">Cadastre algumas vendas vinculando cada venda a um cliente já cadastrado.</p></div>
   <ul>
     <li>Use o ID do cliente.</li>
@@ -392,7 +392,7 @@ VALUES
 </section>
 
 <section class="slide compact">
-  <h2>Resposta 11 — Inserir vendas</h2>
+  <h2>Resposta 11 - Inserir vendas</h2>
   <div class="code-wrap"><button class="copy">Copiar</button><pre><code>INSERT INTO venda
 (id_cliente, data_venda, valor_total, forma_venda, status_venda)
 VALUES
@@ -404,7 +404,7 @@ VALUES
 </section>
 
 <section class="slide">
-  <h2>Atividade 12 — Inserir itens das vendas</h2>
+  <h2>Atividade 12 - Inserir itens das vendas</h2>
   <div class="card accent"><p class="task-box">Registre os produtos vendidos dentro de cada venda.</p></div>
   <ul>
     <li>Informe o ID da venda.</li>
@@ -414,7 +414,7 @@ VALUES
 </section>
 
 <section class="slide compact">
-  <h2>Resposta 12 — Inserir itens das vendas</h2>
+  <h2>Resposta 12 - Inserir itens das vendas</h2>
   <div class="code-wrap"><button class="copy">Copiar</button><pre><code>INSERT INTO item_venda
 (id_venda, id_produto, quantidade, valor_unitario, desconto, subtotal)
 VALUES
@@ -432,25 +432,25 @@ VALUES
 </section>
 
 <section class="slide">
-  <h2>Atividade 13 — Consultar todos os clientes</h2>
+  <h2>Atividade 13 - Consultar todos os clientes</h2>
   <div class="card accent"><p class="task-box">Faça uma consulta para listar todos os registros da tabela <b>cliente</b>.</p></div>
   <p>Essa consulta serve para conferir se os dados foram inseridos corretamente.</p>
 </section>
 
 <section class="slide compact">
-  <h2>Resposta 13 — Consultar todos os clientes</h2>
+  <h2>Resposta 13 - Consultar todos os clientes</h2>
   <div class="code-wrap"><button class="copy">Copiar</button><pre><code>SELECT *
 FROM cliente;</code></pre></div>
 </section>
 
 <section class="slide">
-  <h2>Atividade 14 — Consultar produtos com colunas específicas</h2>
+  <h2>Atividade 14 - Consultar produtos com colunas específicas</h2>
   <div class="card accent"><p class="task-box">Liste apenas o nome do produto, preço de venda e estoque atual.</p></div>
   <p>A ideia é não trazer todas as colunas, apenas as mais importantes para conferência.</p>
 </section>
 
 <section class="slide compact">
-  <h2>Resposta 14 — Produtos com colunas específicas</h2>
+  <h2>Resposta 14 - Produtos com colunas específicas</h2>
   <div class="code-wrap"><button class="copy">Copiar</button><pre><code>SELECT 
     nome_produto,
     preco_venda,
@@ -459,13 +459,13 @@ FROM produto;</code></pre></div>
 </section>
 
 <section class="slide">
-  <h2>Atividade 15 — Filtrar clientes por cidade</h2>
+  <h2>Atividade 15 - Filtrar clientes por cidade</h2>
   <div class="card accent"><p class="task-box">Liste os clientes que moram na cidade de <b>Ibirité</b>.</p></div>
   <p>Use uma condição para filtrar apenas os registros desejados.</p>
 </section>
 
 <section class="slide compact">
-  <h2>Resposta 15 — Filtrar clientes por cidade</h2>
+  <h2>Resposta 15 - Filtrar clientes por cidade</h2>
   <div class="code-wrap"><button class="copy">Copiar</button><pre><code>SELECT 
     nome,
     telefone,
@@ -475,13 +475,13 @@ WHERE cidade = 'Ibirité';</code></pre></div>
 </section>
 
 <section class="slide">
-  <h2>Atividade 16 — Filtrar produtos por preço</h2>
+  <h2>Atividade 16 - Filtrar produtos por preço</h2>
   <div class="card accent"><p class="task-box">Liste os produtos com preço de venda maior ou igual a R$ 10,00.</p></div>
   <p>Essa consulta ajuda o comércio a visualizar produtos de maior valor.</p>
 </section>
 
 <section class="slide compact">
-  <h2>Resposta 16 — Produtos por preço</h2>
+  <h2>Resposta 16 - Produtos por preço</h2>
   <div class="code-wrap"><button class="copy">Copiar</button><pre><code>SELECT 
     nome_produto,
     preco_venda
@@ -490,7 +490,7 @@ WHERE preco_venda >= 10.00;</code></pre></div>
 </section>
 
 <section class="slide">
-  <h2>Atividade 17 — Ordenar produtos pelo preço</h2>
+  <h2>Atividade 17 - Ordenar produtos pelo preço</h2>
   <div class="card accent"><p class="task-box">Liste os produtos do maior para o menor preço de venda.</p></div>
   <div class="row" style="margin-top:22px">
     <div class="card blue">
@@ -510,7 +510,7 @@ WHERE preco_venda >= 10.00;</code></pre></div>
 </section>
 
 <section class="slide compact">
-  <h2>Resposta 17 — Ordenar produtos pelo preço</h2>
+  <h2>Resposta 17 - Ordenar produtos pelo preço</h2>
   <div class="two-col" style="grid-template-columns:58% 42%;gap:22px;flex:1;min-height:0">
     <div class="code-wrap"><button class="copy">Copiar</button><pre><code>SELECT 
     nome_produto,
@@ -530,7 +530,7 @@ ORDER BY preco_venda DESC;</code></pre></div>
 </section>
 
 <section class="slide">
-  <h2>Atividade 18 — Contar clientes cadastrados</h2>
+  <h2>Atividade 18 - Contar clientes cadastrados</h2>
   <div class="card accent"><p class="task-box">Faça uma consulta para contar quantos clientes existem cadastrados.</p></div>
   <div class="row" style="margin-top:22px">
     <div class="card blue">
@@ -545,7 +545,7 @@ ORDER BY preco_venda DESC;</code></pre></div>
 </section>
 
 <section class="slide compact">
-  <h2>Resposta 18 — Contar clientes</h2>
+  <h2>Resposta 18 - Contar clientes</h2>
   <div class="two-col" style="grid-template-columns:58% 42%;gap:22px;flex:1;min-height:0">
     <div class="code-wrap"><button class="copy">Copiar</button><pre><code>SELECT COUNT(*) AS total_clientes
 FROM cliente;</code></pre></div>
@@ -561,7 +561,7 @@ FROM cliente;</code></pre></div>
 </section>
 
 <section class="slide">
-  <h2>Atividade 19 — Somar o total das vendas</h2>
+  <h2>Atividade 19 - Somar o total das vendas</h2>
   <div class="card accent"><p class="task-box">Some o valor total de todas as vendas cadastradas.</p></div>
   <div class="row" style="margin-top:22px">
     <div class="card blue">
@@ -576,7 +576,7 @@ FROM cliente;</code></pre></div>
 </section>
 
 <section class="slide compact">
-  <h2>Resposta 19 — Somar vendas</h2>
+  <h2>Resposta 19 - Somar vendas</h2>
   <div class="two-col" style="grid-template-columns:58% 42%;gap:22px;flex:1;min-height:0">
     <div class="code-wrap"><button class="copy">Copiar</button><pre><code>SELECT SUM(valor_total) AS total_vendido
 FROM venda;</code></pre></div>
@@ -592,7 +592,7 @@ FROM venda;</code></pre></div>
 </section>
 
 <section class="slide">
-  <h2>Atividade 20 — Agrupar clientes por cidade</h2>
+  <h2>Atividade 20 - Agrupar clientes por cidade</h2>
   <div class="card accent"><p class="task-box">Conte quantos clientes existem em cada cidade.</p></div>
   <div class="row" style="margin-top:22px">
     <div class="card blue">
@@ -607,7 +607,7 @@ FROM venda;</code></pre></div>
 </section>
 
 <section class="slide compact">
-  <h2>Resposta 20 — Clientes por cidade</h2>
+  <h2>Resposta 20 - Clientes por cidade</h2>
   <div class="two-col" style="grid-template-columns:58% 42%;gap:22px;flex:1;min-height:0">
     <div class="code-wrap"><button class="copy">Copiar</button><pre><code>SELECT 
     cidade,
@@ -628,7 +628,7 @@ ORDER BY quantidade_clientes DESC;</code></pre></div>
 </section>
 
 <section class="slide">
-  <h2>Atividade 21 — JOIN entre produto e categoria</h2>
+  <h2>Atividade 21 - JOIN entre produto e categoria</h2>
   <div class="card accent"><p class="task-box">Liste os produtos mostrando também o nome da categoria de cada um.</p></div>
   <div class="row" style="margin-top:22px">
     <div class="card blue">
@@ -648,7 +648,7 @@ ORDER BY quantidade_clientes DESC;</code></pre></div>
 </section>
 
 <section class="slide compact">
-  <h2>Resposta 21 — Produto com categoria</h2>
+  <h2>Resposta 21 - Produto com categoria</h2>
   <div class="two-col" style="grid-template-columns:58% 42%;gap:22px;flex:1;min-height:0">
     <div class="code-wrap"><button class="copy">Copiar</button><pre><code>SELECT 
     p.nome_produto AS `Produto`,
@@ -672,7 +672,7 @@ ORDER BY c.nome_categoria, p.nome_produto;</code></pre></div>
 </section>
 
 <section class="slide">
-  <h2>Atividade 22 — JOIN entre venda e cliente</h2>
+  <h2>Atividade 22 - JOIN entre venda e cliente</h2>
   <div class="card accent"><p class="task-box">Liste as vendas mostrando o nome do cliente, a data da venda e o valor total.</p></div>
   <div class="row" style="margin-top:22px">
     <div class="card blue">
@@ -692,7 +692,7 @@ ORDER BY c.nome_categoria, p.nome_produto;</code></pre></div>
 </section>
 
 <section class="slide compact">
-  <h2>Resposta 22 — Venda com cliente</h2>
+  <h2>Resposta 22 - Venda com cliente</h2>
   <div class="two-col" style="grid-template-columns:58% 42%;gap:22px;flex:1;min-height:0">
     <div class="code-wrap"><button class="copy">Copiar</button><pre><code>SELECT 
     v.id_venda AS `Código da Venda`,
@@ -716,7 +716,7 @@ ORDER BY v.data_venda, c.nome;</code></pre></div>
 </section>
 
 <section class="slide">
-  <h2>Atividade 23 — JOIN completo de vendas</h2>
+  <h2>Atividade 23 - JOIN completo de vendas</h2>
   <div class="card accent"><p class="task-box">Liste cliente, venda, produto, quantidade e subtotal de cada item vendido.</p></div>
   <div class="row" style="margin-top:22px">
     <div class="card blue">
@@ -736,7 +736,7 @@ ORDER BY v.data_venda, c.nome;</code></pre></div>
 </section>
 
 <section class="slide compact">
-  <h2>Resposta 23 — Consulta completa de vendas</h2>
+  <h2>Resposta 23 - Consulta completa de vendas</h2>
   <div class="two-col" style="grid-template-columns:60% 40%;gap:22px;flex:1;min-height:0">
     <div class="code-wrap"><button class="copy">Copiar</button><pre><code>SELECT 
     c.nome AS `Cliente`,
@@ -777,7 +777,7 @@ ORDER BY c.nome, v.id_venda, p.nome_produto;</code></pre></div>
   <div class="card" style="margin-top:26px"><p class="lead">Quando o aluno entende o relacionamento entre tabelas, ele deixa de apenas decorar comandos e passa a compreender como um sistema real funciona.</p></div>
 </section>
 
-<div class="footer"><span>Controle de Compras e Vendas • MySQL</span><span class="slide-no" id="slideNo">1 / 1</span></div>
+<div class="footer"><span>Controle de Compras e Vendas • MySQL • FIC|PRONATEC|FHA/ESSA</span><span class="slide-no" id="slideNo">1 / 1</span></div>
 <div class="progress" id="progress"></div>
 <div class="nav"><button id="prev">◀</button><button id="next">▶</button></div>
 </div>
