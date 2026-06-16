@@ -1,170 +1,682 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Aula de Banco de Dados - Controle de Compras e Vendas</title>
-<style>
-:root{
-  --bg:#07111f;
-  --bg2:#0d1b2f;
-  --card:#13243a;
-  --card2:#182d47;
-  --text:#f3f7fb;
-  --muted:#b8c7d9;
-  --accent:#4ade80;
-  --accent2:#38bdf8;
-  --warning:#fbbf24;
-  --danger:#fb7185;
-  --line:rgba(255,255,255,.12);
-  --code:#08111f;
-}
-*{box-sizing:border-box}
-html,body{margin:0;height:100%;font-family:Inter,Segoe UI,Arial,sans-serif;background:linear-gradient(135deg,var(--bg),var(--bg2));color:var(--text);overflow:hidden}
-.deck{height:100vh;width:100vw;position:relative;overflow:hidden}
-.slide{display:none;height:100vh;width:100vw;padding:54px 72px 82px;position:absolute;inset:0;background:
- radial-gradient(circle at 15% 15%,rgba(56,189,248,.18),transparent 32%),
- radial-gradient(circle at 85% 20%,rgba(74,222,128,.13),transparent 30%),
- linear-gradient(135deg,var(--bg),var(--bg2));}
-.slide.active{display:flex;flex-direction:column;animation:fade .18s ease-in-out}
-@keyframes fade{from{opacity:.5;transform:translateX(12px)}to{opacity:1;transform:translateX(0)}}
-h1{font-size:54px;line-height:1.05;margin:0 0 22px;font-weight:850;letter-spacing:-1.2px}
-h2{font-size:39px;line-height:1.12;margin:0 0 18px;font-weight:820;color:#fff;letter-spacing:-.6px}
-h3{font-size:25px;margin:0 0 10px;color:#eaf4ff}
-p{font-size:23px;line-height:1.42;color:var(--muted);margin:0 0 16px}.lead{font-size:27px;line-height:1.38;color:#e4eef9;max-width:1050px}.small{font-size:17px;color:#afbfd1}.badge{display:inline-block;padding:8px 14px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.06);font-size:16px;color:#d9e7f5;margin:0 8px 8px 0}.row{display:grid;grid-template-columns:1fr 1fr;gap:22px}.row3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.card{background:rgba(19,36,58,.88);border:1px solid var(--line);border-radius:24px;padding:22px;box-shadow:0 20px 50px rgba(0,0,0,.18)}.card.light{background:rgba(24,45,71,.9)}.card.accent{border-color:rgba(74,222,128,.4);background:linear-gradient(180deg,rgba(74,222,128,.16),rgba(19,36,58,.88))}.card.blue{border-color:rgba(56,189,248,.4);background:linear-gradient(180deg,rgba(56,189,248,.15),rgba(19,36,58,.88))}.card.warn{border-color:rgba(251,191,36,.48);background:linear-gradient(180deg,rgba(251,191,36,.13),rgba(19,36,58,.88))}ul,ol{font-size:22px;line-height:1.5;color:#d2dfec;margin:8px 0 0;padding-left:28px}li{margin:4px 0}.timeline{display:grid;grid-template-columns:120px 1fr;gap:12px;align-items:start}.time{font-weight:800;color:#fff;background:rgba(74,222,128,.15);border:1px solid rgba(74,222,128,.35);border-radius:14px;padding:9px 12px;text-align:center}.task-title{font-size:34px;font-weight:850;margin:0 0 10px}.task-box{font-size:25px;line-height:1.38;color:#e8f2ff}.answer{border-left:7px solid var(--accent);padding-left:22px}.code-wrap{position:relative;flex:1;min-height:0}.copy{position:absolute;right:13px;top:13px;z-index:2;border:1px solid var(--line);background:#10233a;color:#eaf4ff;border-radius:12px;padding:8px 12px;cursor:pointer;font-weight:700}.copy:hover{background:#18314e}pre{margin:0;border-radius:22px;background:var(--code);border:1px solid rgba(255,255,255,.13);padding:24px;overflow:auto;font-size:19px;line-height:1.42;color:#e7f0fb;box-shadow:inset 0 0 0 1px rgba(255,255,255,.02);height:100%}code{font-family:"Cascadia Code","Fira Code",Consolas,monospace}.kw{color:#7dd3fc}.fn{color:#86efac}.cm{color:#94a3b8}.str{color:#fde68a}.num{color:#fca5a5}.schema{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:14px}.table-card{border:1px solid var(--line);border-radius:18px;background:rgba(8,17,31,.56);padding:16px}.table-card strong{font-size:19px;color:#fff}.table-card div{font-size:15px;color:#b8c7d9;margin-top:8px;line-height:1.4}.arrow{font-size:34px;color:var(--accent2);text-align:center}.footer{position:absolute;left:72px;right:72px;bottom:30px;display:flex;align-items:center;justify-content:space-between;color:#9db0c4;font-size:15px}.progress{position:absolute;left:0;bottom:0;height:6px;background:linear-gradient(90deg,var(--accent),var(--accent2));width:0}.nav{position:absolute;right:22px;bottom:18px;display:flex;gap:8px;z-index:10}.nav button{border:1px solid var(--line);background:rgba(19,36,58,.82);color:#fff;border-radius:14px;padding:10px 14px;font-weight:800;cursor:pointer}.nav button:hover{background:rgba(56,189,248,.22)}.slide-no{font-weight:800;color:#dbeafe}.tagline{position:absolute;top:24px;right:72px;color:#a9bbce;font-size:15px}.center{justify-content:center}.big-number{font-size:70px;font-weight:900;color:var(--accent);line-height:1}.two-col{display:grid;grid-template-columns:42% 58%;gap:28px;align-items:start}.compact pre{font-size:17px}.mini pre{font-size:16px}.table{border-collapse:collapse;width:100%;font-size:18px;color:#d7e5f3}.table th,.table td{border-bottom:1px solid var(--line);padding:10px;text-align:left}.table th{color:#fff;background:rgba(255,255,255,.06)}.kbd{font-family:Consolas,monospace;border:1px solid var(--line);border-bottom-width:3px;border-radius:8px;padding:3px 8px;background:rgba(255,255,255,.07);color:#fff}.highlight{color:var(--accent);font-weight:850}.danger{color:var(--danger);font-weight:800}.warning{color:var(--warning);font-weight:800}@media print{html,body{overflow:visible}.slide{display:flex!important;position:relative;page-break-after:always;height:100vh}.nav,.progress,.copy{display:none}}
-@media(max-width:900px){.slide{padding:36px 24px 70px}h1{font-size:38px}h2{font-size:31px}.row,.row3,.two-col{grid-template-columns:1fr}.schema{grid-template-columns:1fr 1fr}pre{font-size:14px}.footer{left:24px;right:24px}.tagline{right:24px}.lead,p,ul,ol{font-size:18px}}
-</style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no" />
+    <title>Aula de Banco de Dados - Controle de Compras e Vendas</title>
+    <style>
+        :root {
+            --bg: #07111f;
+            --bg2: #0d1b2f;
+            --card: #13243a;
+            --card2: #182d47;
+            --text: #f3f7fb;
+            --muted: #b8c7d9;
+            --accent: #4ade80;
+            --accent2: #38bdf8;
+            --warning: #fbbf24;
+            --danger: #fb7185;
+            --line: rgba(255,255,255,.12);
+            --code: #08111f;
+            --safe-top: max(env(safe-area-inset-top), 16px);
+            --safe-bottom: max(env(safe-area-inset-bottom), 16px);
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, var(--bg), var(--bg2));
+            color: var(--text);
+            overflow: hidden;
+            position: fixed;
+        }
+
+        body {
+            overscroll-behavior: none;
+        }
+
+        .deck {
+            height: 100vh;
+            width: 100vw;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .slides-container {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .slide {
+            display: none;
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            padding: clamp(16px, 5vw, 72px) clamp(16px, 5vw, 72px) clamp(80px, 15vh, 120px) clamp(16px, 5vw, 72px);
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+            background: radial-gradient(circle at 15% 15%, rgba(56, 189, 248, .18), transparent 32%),
+                        radial-gradient(circle at 85% 20%, rgba(74, 222, 128, .13), transparent 30%),
+                        linear-gradient(135deg, var(--bg), var(--bg2));
+            animation: slideIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+            z-index: 10;
+        }
+
+        .slide.prev {
+            animation: slideOut 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(60px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideOut {
+            to {
+                opacity: 0;
+                transform: translateX(-60px);
+            }
+        }
+
+        /* Tipografia Responsiva */
+        h1 {
+            font-size: clamp(32px, 8vw, 54px);
+            line-height: 1.05;
+            margin: 0 0 clamp(12px, 3vh, 22px) 0;
+            font-weight: 850;
+            letter-spacing: -1.2px;
+        }
+
+        h2 {
+            font-size: clamp(26px, 6.5vw, 39px);
+            line-height: 1.12;
+            margin: 0 0 clamp(14px, 2.5vh, 18px) 0;
+            font-weight: 820;
+            color: #fff;
+            letter-spacing: -0.6px;
+        }
+
+        h3 {
+            font-size: clamp(18px, 4vw, 25px);
+            margin: 0 0 clamp(8px, 1.5vh, 10px) 0;
+            color: #eaf4ff;
+        }
+
+        p {
+            font-size: clamp(16px, 3.5vw, 23px);
+            line-height: 1.42;
+            color: var(--muted);
+            margin: 0 0 clamp(12px, 2vh, 16px) 0;
+        }
+
+        .lead {
+            font-size: clamp(18px, 4.5vw, 27px);
+            line-height: 1.38;
+            color: #e4eef9;
+            max-width: 100%;
+        }
+
+        .small {
+            font-size: clamp(14px, 2.5vw, 17px);
+            color: #afbfd1;
+        }
+
+        /* Cards e Layouts */
+        .badge {
+            display: inline-block;
+            padding: clamp(6px, 1.5vw, 8px) clamp(10px, 2vw, 14px);
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .06);
+            font-size: clamp(13px, 2.5vw, 16px);
+            color: #d9e7f5;
+            margin: 0 clamp(6px, 1vw, 8px) clamp(6px, 1vh, 8px) 0;
+            white-space: nowrap;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: clamp(12px, 3vw, 22px);
+            margin: clamp(12px, 2vh, 16px) 0;
+        }
+
+        .row3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: clamp(10px, 2.5vw, 18px);
+            margin: clamp(12px, 2vh, 16px) 0;
+        }
+
+        .card {
+            background: rgba(19, 36, 58, .88);
+            border: 1px solid var(--line);
+            border-radius: clamp(16px, 4vw, 24px);
+            padding: clamp(14px, 3.5vw, 22px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, .18);
+        }
+
+        .card.accent {
+            border-color: rgba(74, 222, 128, .4);
+            background: linear-gradient(180deg, rgba(74, 222, 128, .16), rgba(19, 36, 58, .88));
+        }
+
+        .card.blue {
+            border-color: rgba(56, 189, 248, .4);
+            background: linear-gradient(180deg, rgba(56, 189, 248, .15), rgba(19, 36, 58, .88));
+        }
+
+        .card.warn {
+            border-color: rgba(251, 191, 36, .48);
+            background: linear-gradient(180deg, rgba(251, 191, 36, .13), rgba(19, 36, 58, .88));
+        }
+
+        ul, ol {
+            font-size: clamp(16px, 3.5vw, 22px);
+            line-height: 1.6;
+            color: #d2dfec;
+            margin: clamp(6px, 1vh, 12px) 0 0 clamp(20px, 4vw, 28px);
+            padding-left: 0;
+        }
+
+        li {
+            margin: clamp(4px, 1vh, 8px) 0;
+            list-style-position: inside;
+        }
+
+        /* Timeline */
+        .timeline {
+            display: grid;
+            grid-template-columns: clamp(80px, 20vw, 120px) 1fr;
+            gap: clamp(8px, 2vw, 12px);
+            align-items: start;
+        }
+
+        .time {
+            font-weight: 800;
+            color: #fff;
+            background: rgba(74, 222, 128, .15);
+            border: 1px solid rgba(74, 222, 128, .35);
+            border-radius: clamp(10px, 2.5vw, 14px);
+            padding: clamp(6px, 1.5vw, 9px) clamp(8px, 2vw, 12px);
+            text-align: center;
+            font-size: clamp(12px, 2vw, 14px);
+            white-space: nowrap;
+        }
+
+        /* Code */
+        .code-wrap {
+            position: relative;
+            width: 100%;
+            min-height: 200px;
+            border-radius: clamp(14px, 3vw, 22px);
+            overflow: hidden;
+            margin: clamp(12px, 2vh, 16px) 0;
+        }
+
+        .copy {
+            position: absolute;
+            right: clamp(8px, 2vw, 13px);
+            top: clamp(8px, 2vw, 13px);
+            z-index: 2;
+            border: 1px solid var(--line);
+            background: #10233a;
+            color: #eaf4ff;
+            border-radius: clamp(8px, 2vw, 12px);
+            padding: clamp(6px, 1.5vw, 8px) clamp(8px, 2vw, 12px);
+            cursor: pointer;
+            font-weight: 700;
+            font-size: clamp(12px, 2.5vw, 14px);
+            touch-action: manipulation;
+            transition: all 0.2s ease;
+            min-height: 40px;
+            min-width: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .copy:active {
+            background: #18314e;
+            transform: scale(0.95);
+        }
+
+        pre {
+            margin: 0;
+            border-radius: clamp(12px, 3vw, 22px);
+            background: var(--code);
+            border: 1px solid rgba(255, 255, 255, .13);
+            padding: clamp(12px, 3vw, 24px);
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
+            font-size: clamp(12px, 2.5vw, 19px);
+            line-height: 1.42;
+            color: #e7f0fb;
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .02);
+            height: 100%;
+        }
+
+        code {
+            font-family: 'Cascadia Code', 'Fira Code', 'Menlo', 'Consolas', monospace;
+        }
+
+        /* Indicadores e Navegação */
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: auto;
+            padding: clamp(12px, 3vh, 20px) clamp(16px, 5vw, 72px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: #9db0c4;
+            font-size: clamp(12px, 2.5vw, 15px);
+            background: linear-gradient(to top, rgba(7, 17, 31, 0.95), transparent);
+            z-index: 20;
+            padding-bottom: calc(clamp(12px, 3vh, 20px) + var(--safe-bottom));
+        }
+
+        .progress {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent), var(--accent2));
+            width: 0;
+            z-index: 21;
+        }
+
+        /* Navegação Mobile-First */
+        .nav {
+            position: fixed;
+            bottom: var(--safe-bottom);
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: clamp(8px, 2vw, 12px);
+            z-index: 22;
+            padding: 0 clamp(12px, 3vw, 16px);
+        }
+
+        .nav button {
+            border: 2px solid var(--accent2);
+            background: rgba(56, 189, 248, .15);
+            color: #fff;
+            border-radius: clamp(10px, 2.5vw, 14px);
+            padding: clamp(10px, 2.5vh, 14px) clamp(16px, 4vw, 20px);
+            font-weight: 800;
+            cursor: pointer;
+            font-size: clamp(14px, 3vw, 16px);
+            touch-action: manipulation;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            min-height: 44px;
+            min-width: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+        }
+
+        .nav button:active {
+            background: rgba(56, 189, 248, .3);
+            transform: scale(0.92);
+        }
+
+        .nav button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .slide-indicator {
+            position: fixed;
+            top: var(--safe-top);
+            right: clamp(16px, 5vw, 72px);
+            padding: clamp(8px, 2vw, 12px) clamp(12px, 3vw, 16px);
+            background: rgba(56, 189, 248, .12);
+            border: 1px solid rgba(56, 189, 248, .3);
+            border-radius: clamp(8px, 2vw, 12px);
+            color: #dbeafe;
+            font-weight: 800;
+            font-size: clamp(12px, 2.5vw, 14px);
+            z-index: 20;
+        }
+
+        .tagline {
+            position: fixed;
+            top: var(--safe-top);
+            left: clamp(16px, 5vw, 72px);
+            color: #a9bbce;
+            font-size: clamp(12px, 2.5vw, 15px);
+            z-index: 20;
+        }
+
+        /* Helpers */
+        .center {
+            justify-content: center;
+            align-items: center;
+        }
+
+        .big-number {
+            font-size: clamp(48px, 15vw, 70px);
+            font-weight: 900;
+            color: var(--accent);
+            line-height: 1;
+            margin-bottom: clamp(8px, 2vh, 12px);
+        }
+
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: clamp(16px, 3vw, 28px);
+            align-items: start;
+        }
+
+        .highlight {
+            color: var(--accent);
+            font-weight: 850;
+        }
+
+        .warning {
+            color: var(--warning);
+            font-weight: 800;
+        }
+
+        /* Swipe Indicator */
+        .swipe-hint {
+            position: fixed;
+            bottom: calc(60px + var(--safe-bottom));
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            animation: fadeInOut 3s ease-in-out;
+            font-size: clamp(12px, 2.5vw, 14px);
+            color: var(--muted);
+            z-index: 5;
+            text-align: center;
+            pointer-events: none;
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0; }
+            10%, 90% { opacity: 0.7; }
+        }
+
+        /* Tablet */
+        @media (max-width: 1024px) {
+            .row {
+                grid-template-columns: 1fr;
+            }
+
+            .two-col {
+                grid-template-columns: 1fr;
+            }
+
+            .row3 {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .row3 {
+                grid-template-columns: 1fr;
+            }
+
+            .slide {
+                padding-bottom: clamp(90px, 20vh, 140px);
+            }
+
+            .nav {
+                bottom: calc(clamp(12px, 2vh, 16px) + var(--safe-bottom));
+            }
+        }
+
+        /* Small Mobile (< 400px) */
+        @media (max-width: 480px) {
+            .slide {
+                padding: clamp(12px, 4vw, 16px) clamp(12px, 3vw, 16px) clamp(100px, 20vh, 150px) clamp(12px, 3vw, 16px);
+            }
+
+            .nav {
+                gap: clamp(6px, 1.5vw, 8px);
+                bottom: calc(clamp(8px, 1.5vh, 12px) + var(--safe-bottom));
+            }
+
+            .nav button {
+                padding: clamp(8px, 2vh, 10px) clamp(12px, 3vw, 14px);
+            }
+
+            .timeline {
+                grid-template-columns: clamp(70px, 25vw, 90px) 1fr;
+                gap: clamp(6px, 1.5vw, 10px);
+            }
+
+            pre {
+                font-size: 11px;
+                padding: clamp(10px, 2vw, 14px);
+            }
+        }
+
+        /* iPhone X/11/12/13/14 Safe Areas */
+        @supports(padding: max(0px)) {
+            .slide {
+                padding-left: max(clamp(16px, 5vw, 72px), env(safe-area-inset-left));
+                padding-right: max(clamp(16px, 5vw, 72px), env(safe-area-inset-right));
+            }
+        }
+
+        /* Landscape */
+        @media (max-height: 500px) {
+            .slide {
+                padding-top: var(--safe-top);
+                padding-bottom: clamp(70px, 15vh, 90px);
+            }
+
+            h1 {
+                margin-bottom: clamp(8px, 1.5vh, 12px);
+            }
+
+            h2 {
+                margin-bottom: clamp(10px, 2vh, 14px);
+            }
+
+            p {
+                margin-bottom: clamp(8px, 1.5vh, 12px);
+            }
+        }
+
+        /* Print */
+        @media print {
+            html, body {
+                position: static;
+                height: auto;
+            }
+
+            .slide {
+                display: flex !important;
+                position: relative;
+                page-break-after: always;
+                height: 100vh;
+                page-break-inside: avoid;
+            }
+
+            .nav, .progress, .copy, .footer, .tagline, .slide-indicator {
+                display: none;
+            }
+        }
+    </style>
 </head>
 <body>
-<div class="deck" id="deck">
+    <div class="deck" id="deck">
+        <div class="tagline" id="tagline">Banco de Dados • FIC/PRONATEC</div>
+        <div class="slide-indicator" id="slideNo">1 / 1</div>
 
-<section class="slide active center">
-  <div class="tagline">Banco de Dados • FIC/PRONATEC</div>
-  <h1>Controle de Compras e Vendas de um Comércio</h1>
-  <p class="lead">Aula prática de MySQL para entender banco de dados, tabelas, chaves, relacionamentos, inserção de dados e consultas básicas.</p>
-  <div style="margin-top:26px">
-    <span class="badge">Professor: Reinaldo Rodrigues</span>
-    <span class="badge">Duração: 2 horas</span>
-    <span class="badge">Prática em laboratório</span>
-  </div>
-</section>
+        <div class="slides-container" id="slidesContainer">
+            <section class="slide active center">
+                <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+                    <h1>Controle de Compras e Vendas de um Comércio</h1>
+                    <p class="lead" style="margin: clamp(16px, 3vh, 24px) 0;">Aula prática de MySQL para entender banco de dados, tabelas, chaves, relacionamentos, inserção de dados e consultas básicas.</p>
+                    <div style="margin-top: clamp(16px, 4vh, 32px); display: flex; flex-wrap: wrap; gap: clamp(8px, 2vw, 12px); justify-content: center;">
+                        <span class="badge">Prof. Reinaldo Rodrigues</span>
+                        <span class="badge">2 horas</span>
+                        <span class="badge">Prática</span>
+                    </div>
+                </div>
+            </section>
 
-<section class="slide">
-  <h2>Objetivos da aula</h2>
-  <div class="row3">
-    <div class="card accent"><div class="big-number">1</div><h3>Criar o banco</h3><p>Entender como iniciar um projeto no MySQL com <b>CREATE DATABASE</b> e <b>USE</b>.</p></div>
-    <div class="card blue"><div class="big-number">2</div><h3>Criar tabelas</h3><p>Modelar clientes, fornecedores, produtos, vendas e itens de venda.</p></div>
-    <div class="card warn"><div class="big-number">3</div><h3>Consultar dados</h3><p>Executar consultas básicas com SELECT, WHERE, ORDER BY, COUNT, SUM e JOIN.</p></div>
-  </div>
-  <div class="card" style="margin-top:24px"><p><span class="highlight">Ideia central:</span> um comércio não trabalha com uma tabela isolada. Cliente se relaciona com venda, venda se relaciona com produto e produto se relaciona com categoria.</p></div>
-</section>
+            <section class="slide">
+                <h2>Objetivos da aula</h2>
+                <div class="row3">
+                    <div class="card accent"><div class="big-number">1</div><h3>Criar o banco</h3><p>Entender como iniciar um projeto no MySQL com CREATE DATABASE e USE.</p></div>
+                    <div class="card blue"><div class="big-number">2</div><h3>Criar tabelas</h3><p>Modelar clientes, fornecedores, produtos, vendas e itens.</p></div>
+                    <div class="card warn"><div class="big-number">3</div><h3>Consultar dados</h3><p>Executar consultas básicas com SELECT, WHERE, JOIN e funções de agregação.</p></div>
+                </div>
+                <div class="card" style="margin-top: clamp(14px, 2.5vh, 24px);"><p><span class="highlight">Ideia central:</span> um comércio não trabalha com uma tabela isolada. Cliente se relaciona com venda, venda com produto, produto com categoria.</p></div>
+            </section>
 
-<section class="slide">
-  <h2>Cronograma da aula - 2 horas</h2>
-  <div class="row">
-    <div class="card blue">
-      <h3>1º horário</h3>
-      <div class="timeline"><div class="time">Abertura</div><p>Apresentação do cenário: controle de compras e vendas de um comércio.</p><div class="time">Conceito</div><p>Importância do relacionamento entre tabelas, chaves primárias e chaves estrangeiras.</p><div class="time">Prática</div><p>Criação do banco de dados e criação das tabelas principais.</p><div class="time">Registro</div><p>Inserção dos dados iniciais para simular um comércio real.</p></div>
-    </div>
-    <div class="card accent">
-      <h3>2º horário</h3>
-      <div class="timeline"><div class="time">Consulta</div><p>SELECT básico: listar todos os registros e escolher colunas específicas.</p><div class="time">Filtro</div><p>Uso de WHERE, LIKE e ORDER BY para localizar e organizar informações.</p><div class="time">Resumo</div><p>Funções simples: COUNT, SUM, AVG, MIN e MAX.</p><div class="time">Relação</div><p>Primeiros exemplos de JOIN para unir cliente, venda e produto.</p></div>
-    </div>
-  </div>
-</section>
+            <section class="slide">
+                <h2>Cronograma - 2 horas</h2>
+                <div class="row">
+                    <div class="card blue">
+                        <h3>1º horário</h3>
+                        <div class="timeline">
+                            <div class="time">Abertura</div><p>Apresentação do cenário</p>
+                            <div class="time">Conceito</div><p>Relacionamento entre tabelas</p>
+                            <div class="time">Prática</div><p>Criação do banco e tabelas</p>
+                            <div class="time">Registro</div><p>Inserção de dados iniciais</p>
+                        </div>
+                    </div>
+                    <div class="card accent">
+                        <h3>2º horário</h3>
+                        <div class="timeline">
+                            <div class="time">Consulta</div><p>SELECT e filtragem básica</p>
+                            <div class="time">Filtro</div><p>WHERE, LIKE, ORDER BY</p>
+                            <div class="time">Resumo</div><p>COUNT, SUM, AVG, MIN, MAX</p>
+                            <div class="time">Relação</div><p>Primeiros JOINs</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-<section class="slide">
-  <h2>Por que relacionamento entre tabelas é tão importante?</h2>
-  <div class="row">
-    <div class="card accent">
-      <h3>Sem relacionamento</h3>
-      <ul>
-        <li>Dados duplicados em várias tabelas.</li>
-        <li>Maior risco de erro no cadastro.</li>
-        <li>Dificuldade para saber o que foi vendido.</li>
-        <li>Relatórios pobres e confusos.</li>
-      </ul>
-    </div>
-    <div class="card blue">
-      <h3>Com relacionamento</h3>
-      <ul>
-        <li>Cada informação fica no lugar correto.</li>
-        <li>A venda aponta para o cliente.</li>
-        <li>O item vendido aponta para o produto.</li>
-        <li>O relatório cruza os dados com segurança.</li>
-      </ul>
-    </div>
-  </div>
-  <div class="card" style="margin-top:22px"><p>Em banco de dados relacional, a pergunta principal não é apenas <b>“quais dados eu tenho?”</b>, mas também <b>“como esses dados se conectam?”</b></p></div>
-</section>
+            <section class="slide">
+                <h2>Por que relacionamento é importante?</h2>
+                <div class="row">
+                    <div class="card accent">
+                        <h3>❌ Sem relacionamento</h3>
+                        <ul>
+                            <li>Dados duplicados em várias tabelas</li>
+                            <li>Risco de erro no cadastro</li>
+                            <li>Dificuldade para saber o que foi vendido</li>
+                            <li>Relatórios pobres e confusos</li>
+                        </ul>
+                    </div>
+                    <div class="card blue">
+                        <h3>✅ Com relacionamento</h3>
+                        <ul>
+                            <li>Cada informação fica no lugar correto</li>
+                            <li>A venda aponta para o cliente</li>
+                            <li>O item vendido aponta para o produto</li>
+                            <li>Relatórios cruzam os dados com segurança</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
 
-<section class="slide">
-  <h2>Mapa simples do banco do comércio</h2>
-  <p>As setas mostram a dependência lógica entre as tabelas.</p>
-  <div class="schema">
-    <div class="table-card"><strong>cliente</strong><div>Guarda os dados de quem compra.</div></div>
-    <div class="table-card"><strong>venda</strong><div>Registra a venda feita para um cliente.</div></div>
-    <div class="table-card"><strong>item_venda</strong><div>Mostra quais produtos entraram na venda.</div></div>
-    <div class="table-card"><strong>produto</strong><div>Guarda preço, estoque e categoria.</div></div>
-    <div class="arrow">⬇</div><div class="arrow">⬇</div><div class="arrow">⬇</div><div class="arrow">⬇</div>
-    <div class="table-card"><strong>fornecedor</strong><div>Quem fornece mercadorias.</div></div>
-    <div class="table-card"><strong>categoria</strong><div>Agrupa produtos por tipo.</div></div>
-    <div class="table-card"><strong>compra</strong><div>Registra entrada de mercadorias.</div></div>
-    <div class="table-card"><strong>item_compra</strong><div>Detalha produtos comprados.</div></div>
-  </div>
-</section>
+            <section class="slide">
+                <h2>Mapa do banco do comércio</h2>
+                <p>As setas mostram a dependência lógica entre as tabelas.</p>
+                <div class="row3">
+                    <div class="card"><strong>cliente</strong><div style="font-size: clamp(13px, 2.5vw, 15px); color: #b8c7d9; margin-top: 8px; line-height: 1.4;">Dados das pessoas que compram.</div></div>
+                    <div class="card"><strong>venda</strong><div style="font-size: clamp(13px, 2.5vw, 15px); color: #b8c7d9; margin-top: 8px; line-height: 1.4;">Registra a venda feita para cliente.</div></div>
+                    <div class="card"><strong>item_venda</strong><div style="font-size: clamp(13px, 2.5vw, 15px); color: #b8c7d9; margin-top: 8px; line-height: 1.4;">Produtos vendidos em cada venda.</div></div>
+                </div>
+                <div class="row3">
+                    <div class="card"><strong>produto</strong><div style="font-size: clamp(13px, 2.5vw, 15px); color: #b8c7d9; margin-top: 8px; line-height: 1.4;">Preço, estoque e categoria.</div></div>
+                    <div class="card"><strong>categoria</strong><div style="font-size: clamp(13px, 2.5vw, 15px); color: #b8c7d9; margin-top: 8px; line-height: 1.4;">Agrupa produtos por tipo.</div></div>
+                    <div class="card"><strong>fornecedor</strong><div style="font-size: clamp(13px, 2.5vw, 15px); color: #b8c7d9; margin-top: 8px; line-height: 1.4;">Quem fornece mercadorias.</div></div>
+                </div>
+            </section>
 
-<section class="slide">
-  <h2>Regras práticas antes de começar</h2>
-  <div class="row3">
-    <div class="card"><h3>Ordem importa</h3><p>Crie primeiro as tabelas independentes. Depois crie as tabelas que dependem delas.</p></div>
-    <div class="card"><h3>Chave primária</h3><p>A <b>PRIMARY KEY</b> identifica cada registro de forma única.</p></div>
-    <div class="card"><h3>Chave estrangeira</h3><p>A <b>FOREIGN KEY</b> cria o vínculo entre duas tabelas.</p></div>
-  </div>
-  <div class="card warn" style="margin-top:22px"><p><span class="warning">Atenção:</span> se uma tabela possui chave estrangeira, a tabela referenciada precisa existir antes.</p></div>
-</section>
+            <section class="slide">
+                <h2>Regras práticas antes de começar</h2>
+                <div class="row3">
+                    <div class="card"><h3>Ordem importa</h3><p>Crie primeiro as tabelas independentes. Depois crie as que dependem delas.</p></div>
+                    <div class="card"><h3>Chave primária</h3><p>A PRIMARY KEY identifica cada registro de forma única.</p></div>
+                    <div class="card"><h3>Chave estrangeira</h3><p>A FOREIGN KEY cria o vínculo entre duas tabelas.</p></div>
+                </div>
+                <div class="card warn" style="margin-top: clamp(14px, 2.5vh, 22px);"><p><span class="warning">⚠️ Atenção:</span> se uma tabela possui chave estrangeira, a tabela referenciada deve existir antes.</p></div>
+            </section>
 
-<section class="slide">
-  <h2>Sequência da prática</h2>
-  <ol>
-    <li>Criar o banco de dados do comércio.</li>
-    <li>Criar as tabelas principais.</li>
-    <li>Inserir alguns dados de exemplo.</li>
-    <li>Conferir os dados cadastrados.</li>
-    <li>Executar consultas básicas.</li>
-    <li>Fazer um JOIN simples para enxergar o relacionamento.</li>
-  </ol>
-  <div class="card" style="margin-top:24px"><p>Em cada atividade, primeiro aparece o desafio. No slide seguinte, aparece a resposta com a query pronta.</p></div>
-</section>
+            <section class="slide">
+                <h2>Sequência da prática</h2>
+                <ol>
+                    <li><strong>Criar</strong> o banco de dados do comércio</li>
+                    <li><strong>Criar</strong> as tabelas principais (cliente, categoria, produto, venda, item_venda)</li>
+                    <li><strong>Inserir</strong> alguns dados de exemplo</li>
+                    <li><strong>Conferir</strong> os dados cadastrados</li>
+                    <li><strong>Executar</strong> consultas básicas com SELECT</li>
+                    <li><strong>Fazer</strong> um JOIN simples para enxergar o relacionamento</li>
+                </ol>
+                <div class="card" style="margin-top: clamp(14px, 2.5vh, 24px);"><p>Em cada atividade, primeiro aparece o desafio. No slide seguinte, aparece a resposta com a query pronta.</p></div>
+            </section>
 
-<section class="slide">
-  <h2>Atividade 1 - Criar o banco de dados</h2>
-  <div class="card accent"><p class="task-box">Crie um banco de dados chamado <b>comercio_fic_pronatec</b> e selecione esse banco para uso.</p></div>
-  <ul>
-    <li>Use o comando de criação de banco.</li>
-    <li>Depois informe ao MySQL que você usará esse banco.</li>
-  </ul>
-</section>
+            <section class="slide">
+                <h2>✏️ Atividade 1 - Criar o banco</h2>
+                <div class="card accent"><p style="font-size: clamp(16px, 3.5vw, 25px); color: #e8f2ff; margin: 0;">Crie um banco de dados chamado <strong>comercio_fic_pronatec</strong> e selecione esse banco para uso.</p></div>
+                <ul style="margin-top: clamp(16px, 3vh, 24px);">
+                    <li>Use o comando de criação de banco</li>
+                    <li>Depois informe ao MySQL que você usará esse banco</li>
+                </ul>
+            </section>
 
-<section class="slide compact">
-  <h2>Resposta 1 - Criar o banco de dados</h2>
-  <div class="code-wrap"><button class="copy">Copiar</button><pre><code>CREATE DATABASE comercio_fic_pronatec;
+            <section class="slide">
+                <h2>✅ Resposta 1 - Criar o banco</h2>
+                <div class="code-wrap"><button class="copy">Copiar</button><pre><code>CREATE DATABASE comercio_fic_pronatec;
 USE comercio_fic_pronatec;</code></pre></div>
-</section>
+            </section>
 
-<section class="slide">
-  <h2>Atividade 2 - Criar a tabela de clientes</h2>
-  <div class="card accent"><p class="task-box">Crie a tabela <b>cliente</b> para armazenar os dados das pessoas que compram no comércio.</p></div>
-  <ul>
-    <li>Inclua código do cliente como chave primária.</li>
-    <li>Inclua nome, CPF, telefone, e-mail, cidade e data de cadastro.</li>
-    <li>O CPF não pode se repetir.</li>
-  </ul>
-</section>
+            <section class="slide">
+                <h2>✏️ Atividade 2 - Tabela cliente</h2>
+                <div class="card accent"><p style="font-size: clamp(16px, 3.5vw, 25px); color: #e8f2ff; margin: 0;">Crie a tabela <strong>cliente</strong> para armazenar as pessoas que compram.</p></div>
+                <ul style="margin-top: clamp(16px, 3vh, 24px);">
+                    <li>Inclua: id, nome, CPF, telefone, email, cidade, data de cadastro</li>
+                    <li>CPF não pode se repetir</li>
+                    <li>Use AUTO_INCREMENT para o ID</li>
+                </ul>
+            </section>
 
-<section class="slide compact">
-  <h2>Resposta 2 - Tabela cliente</h2>
-  <div class="code-wrap"><button class="copy">Copiar</button><pre><code>CREATE TABLE cliente (
+            <section class="slide">
+                <h2>✅ Resposta 2 - Tabela cliente</h2>
+                <div class="code-wrap"><button class="copy">Copiar</button><pre><code>CREATE TABLE cliente (
     id_cliente INT PRIMARY KEY AUTO_INCREMENT,
     nome VARCHAR(150) NOT NULL,
     cpf VARCHAR(14) NOT NULL UNIQUE,
@@ -172,63 +684,39 @@ USE comercio_fic_pronatec;</code></pre></div>
     email VARCHAR(150),
     cidade VARCHAR(100),
     data_cadastro DATE DEFAULT (CURRENT_DATE)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;</code></pre></div>
-</section>
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;</code></pre></div>
+            </section>
 
-<section class="slide">
-  <h2>Atividade 3 - Criar a tabela de fornecedores</h2>
-  <div class="card accent"><p class="task-box">Crie a tabela <b>fornecedor</b> para guardar os dados das empresas que fornecem produtos ao comércio.</p></div>
-  <ul>
-    <li>Inclua código do fornecedor como chave primária.</li>
-    <li>Inclua razão social, CNPJ, telefone, e-mail, cidade e data de cadastro.</li>
-    <li>O CNPJ não pode se repetir.</li>
-  </ul>
-</section>
+            <section class="slide">
+                <h2>✏️ Atividade 3 - Tabela categoria</h2>
+                <div class="card accent"><p style="font-size: clamp(16px, 3.5vw, 25px); color: #e8f2ff; margin: 0;">Crie a tabela <strong>categoria</strong> para classificar os produtos.</p></div>
+                <ul style="margin-top: clamp(16px, 3vh, 24px);">
+                    <li>Inclua: id, nome_categoria, descricao</li>
+                    <li>Exemplos: Alimentos, Bebidas, Higiene, Limpeza, Papelaria</li>
+                </ul>
+            </section>
 
-<section class="slide compact">
-  <h2>Resposta 3 - Tabela fornecedor</h2>
-  <div class="code-wrap"><button class="copy">Copiar</button><pre><code>CREATE TABLE fornecedor (
-    id_fornecedor INT PRIMARY KEY AUTO_INCREMENT,
-    razao_social VARCHAR(150) NOT NULL,
-    cnpj VARCHAR(18) NOT NULL UNIQUE,
-    telefone VARCHAR(20),
-    email VARCHAR(150),
-    cidade VARCHAR(100),
-    data_cadastro DATE DEFAULT (CURRENT_DATE)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;</code></pre></div>
-</section>
-
-<section class="slide">
-  <h2>Atividade 4 - Criar a tabela de categorias</h2>
-  <div class="card accent"><p class="task-box">Crie a tabela <b>categoria</b> para classificar os produtos vendidos no comércio.</p></div>
-  <ul>
-    <li>Inclua código da categoria como chave primária.</li>
-    <li>Inclua nome da categoria e descrição.</li>
-  </ul>
-</section>
-
-<section class="slide compact">
-  <h2>Resposta 4 - Tabela categoria</h2>
-  <div class="code-wrap"><button class="copy">Copiar</button><pre><code>CREATE TABLE categoria (
+            <section class="slide">
+                <h2>✅ Resposta 3 - Tabela categoria</h2>
+                <div class="code-wrap"><button class="copy">Copiar</button><pre><code>CREATE TABLE categoria (
     id_categoria INT PRIMARY KEY AUTO_INCREMENT,
     nome_categoria VARCHAR(100) NOT NULL,
     descricao VARCHAR(255)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;</code></pre></div>
-</section>
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;</code></pre></div>
+            </section>
 
-<section class="slide">
-  <h2>Atividade 5 - Criar a tabela de produtos</h2>
-  <div class="card accent"><p class="task-box">Crie a tabela <b>produto</b> e relacione cada produto com uma categoria.</p></div>
-  <ul>
-    <li>Inclua código do produto como chave primária.</li>
-    <li>Inclua nome, código de barras, preço de custo, preço de venda, estoque e status.</li>
-    <li>Use chave estrangeira para relacionar produto com categoria.</li>
-  </ul>
-</section>
+            <section class="slide">
+                <h2>✏️ Atividade 4 - Tabela produto</h2>
+                <div class="card accent"><p style="font-size: clamp(16px, 3.5vw, 25px); color: #e8f2ff; margin: 0;">Crie a tabela <strong>produto</strong> e relacione com categoria.</p></div>
+                <ul style="margin-top: clamp(16px, 3vh, 24px);">
+                    <li>Inclua: id, nome, código de barras, id_categoria, preço de custo/venda, estoque</li>
+                    <li>Use FOREIGN KEY para relacionar com categoria</li>
+                </ul>
+            </section>
 
-<section class="slide compact">
-  <h2>Resposta 5 - Tabela produto</h2>
-  <div class="code-wrap"><button class="copy">Copiar</button><pre><code>CREATE TABLE produto (
+            <section class="slide">
+                <h2>✅ Resposta 4 - Tabela produto</h2>
+                <div class="code-wrap"><button class="copy">Copiar</button><pre><code>CREATE TABLE produto (
     id_produto INT PRIMARY KEY AUTO_INCREMENT,
     nome_produto VARCHAR(150) NOT NULL,
     codigo_barras VARCHAR(30) NOT NULL UNIQUE,
@@ -236,54 +724,48 @@ USE comercio_fic_pronatec;</code></pre></div>
     preco_custo DECIMAL(10,2) NOT NULL,
     preco_venda DECIMAL(10,2) NOT NULL,
     estoque_atual INT NOT NULL DEFAULT 0,
-    estoque_minimo INT NOT NULL DEFAULT 0,
-    ativo CHAR(1) DEFAULT 'S',
-
     CONSTRAINT fk_produto_categoria
         FOREIGN KEY (id_categoria)
         REFERENCES categoria(id_categoria)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;</code></pre></div>
-</section>
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;</code></pre></div>
+            </section>
 
-<section class="slide">
-  <h2>Atividade 6 - Criar a tabela de vendas</h2>
-  <div class="card accent"><p class="task-box">Crie a tabela <b>venda</b> para registrar as vendas realizadas para os clientes.</p></div>
-  <ul>
-    <li>Inclua código da venda como chave primária.</li>
-    <li>Inclua cliente, data da venda, valor total, forma da venda e status.</li>
-    <li>Use chave estrangeira para relacionar venda com cliente.</li>
-  </ul>
-</section>
+            <section class="slide">
+                <h2>✏️ Atividade 5 - Tabela venda</h2>
+                <div class="card accent"><p style="font-size: clamp(16px, 3.5vw, 25px); color: #e8f2ff; margin: 0;">Crie a tabela <strong>venda</strong> para registrar vendas aos clientes.</p></div>
+                <ul style="margin-top: clamp(16px, 3vh, 24px);">
+                    <li>Inclua: id, id_cliente, data, valor_total, forma_venda, status</li>
+                    <li>Relacione com a tabela cliente via FOREIGN KEY</li>
+                </ul>
+            </section>
 
-<section class="slide compact">
-  <h2>Resposta 6 - Tabela venda</h2>
-  <div class="code-wrap"><button class="copy">Copiar</button><pre><code>CREATE TABLE venda (
+            <section class="slide">
+                <h2>✅ Resposta 5 - Tabela venda</h2>
+                <div class="code-wrap"><button class="copy">Copiar</button><pre><code>CREATE TABLE venda (
     id_venda INT PRIMARY KEY AUTO_INCREMENT,
     id_cliente INT NOT NULL,
     data_venda DATE DEFAULT (CURRENT_DATE),
     valor_total DECIMAL(10,2) NOT NULL,
     forma_venda VARCHAR(50) NOT NULL,
     status_venda VARCHAR(30) DEFAULT 'Finalizada',
-
     CONSTRAINT fk_venda_cliente
         FOREIGN KEY (id_cliente)
         REFERENCES cliente(id_cliente)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;</code></pre></div>
-</section>
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;</code></pre></div>
+            </section>
 
-<section class="slide">
-  <h2>Atividade 7 - Criar a tabela de itens da venda</h2>
-  <div class="card accent"><p class="task-box">Crie a tabela <b>item_venda</b> para detalhar quais produtos foram vendidos em cada venda.</p></div>
-  <ul>
-    <li>Relacione o item com a venda.</li>
-    <li>Relacione o item com o produto.</li>
-    <li>Inclua quantidade, valor unitário, desconto e subtotal.</li>
-  </ul>
-</section>
+            <section class="slide">
+                <h2>✏️ Atividade 6 - Tabela item_venda</h2>
+                <div class="card accent"><p style="font-size: clamp(16px, 3.5vw, 25px); color: #e8f2ff; margin: 0;">Crie a tabela <strong>item_venda</strong> para detalhar produtos de cada venda.</p></div>
+                <ul style="margin-top: clamp(16px, 3vh, 24px);">
+                    <li>Inclua: id, id_venda, id_produto, quantidade, valor_unitário, desconto, subtotal</li>
+                    <li>Relacione com venda e produto</li>
+                </ul>
+            </section>
 
-<section class="slide compact">
-  <h2>Resposta 7 - Tabela item_venda</h2>
-  <div class="code-wrap"><button class="copy">Copiar</button><pre><code>CREATE TABLE item_venda (
+            <section class="slide">
+                <h2>✅ Resposta 6 - Tabela item_venda</h2>
+                <div class="code-wrap"><button class="copy">Copiar</button><pre><code>CREATE TABLE item_venda (
     id_item_venda INT PRIMARY KEY AUTO_INCREMENT,
     id_venda INT NOT NULL,
     id_produto INT NOT NULL,
@@ -291,460 +773,192 @@ USE comercio_fic_pronatec;</code></pre></div>
     valor_unitario DECIMAL(10,2) NOT NULL,
     desconto DECIMAL(10,2) DEFAULT 0.00,
     subtotal DECIMAL(10,2) NOT NULL,
-
     CONSTRAINT fk_item_venda_venda
         FOREIGN KEY (id_venda)
         REFERENCES venda(id_venda),
-
     CONSTRAINT fk_item_venda_produto
         FOREIGN KEY (id_produto)
         REFERENCES produto(id_produto)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;</code></pre></div>
-</section>
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;</code></pre></div>
+            </section>
 
-<section class="slide">
-  <h2>Pausa de revisão - final do 1º horário</h2>
-  <div class="row3">
-    <div class="card"><h3>Banco criado</h3><p>O MySQL já sabe onde os dados serão armazenados.</p></div>
-    <div class="card"><h3>Tabelas criadas</h3><p>Cada tabela representa um assunto do comércio.</p></div>
-    <div class="card"><h3>Relacionamentos criados</h3><p>As chaves estrangeiras ligam produto com categoria, venda com cliente e item com venda/produto.</p></div>
-  </div>
-  <div class="card warn" style="margin-top:22px"><p>Agora vamos alimentar o banco com dados para conseguir consultar.</p></div>
-</section>
-
-<section class="slide">
-  <h2>Atividade 8 - Inserir categorias</h2>
-  <div class="card accent"><p class="task-box">Insira categorias básicas para organizar os produtos do comércio.</p></div>
-  <ul>
-    <li>Alimentos</li>
-    <li>Bebidas</li>
-    <li>Higiene</li>
-    <li>Limpeza</li>
-    <li>Papelaria</li>
-  </ul>
-</section>
-
-<section class="slide compact">
-  <h2>Resposta 8 - Inserir categorias</h2>
-  <div class="code-wrap"><button class="copy">Copiar</button><pre><code>INSERT INTO categoria
-(nome_categoria, descricao)
+            <section class="slide">
+                <h2>📊 Inserindo categorias</h2>
+                <div class="card accent"><p style="font-size: clamp(16px, 3.5vw, 25px); color: #e8f2ff; margin: 0;">Insira categorias básicas para organizar os produtos.</p></div>
+                <div class="code-wrap" style="margin-top: clamp(14px, 2.5vh, 22px);"><button class="copy">Copiar</button><pre><code>INSERT INTO categoria (nome_categoria, descricao)
 VALUES
 ('Alimentos', 'Produtos alimentícios em geral'),
-('Bebidas', 'Refrigerantes, sucos e bebidas em geral'),
+('Bebidas', 'Refrigerantes, sucos e bebidas'),
 ('Higiene', 'Produtos de higiene pessoal'),
 ('Limpeza', 'Produtos de limpeza doméstica'),
-('Papelaria', 'Materiais escolares e de escritório');</code></pre></div>
-</section>
+('Papelaria', 'Materiais escolares e escritório');</code></pre></div>
+            </section>
 
-<section class="slide">
-  <h2>Atividade 9 - Inserir clientes</h2>
-  <div class="card accent"><p class="task-box">Insira alguns clientes para que seja possível registrar vendas.</p></div>
-  <ul>
-    <li>Cadastre pelo menos 5 clientes.</li>
-    <li>Preencha nome, CPF, telefone, e-mail e cidade.</li>
-    <li>Lembre-se: CPF deve ser único.</li>
-  </ul>
-</section>
-
-<section class="slide compact">
-  <h2>Resposta 9 - Inserir clientes</h2>
-  <div class="code-wrap"><button class="copy">Copiar</button><pre><code>INSERT INTO cliente
-(nome, cpf, telefone, email, cidade)
+            <section class="slide">
+                <h2>👥 Inserindo clientes</h2>
+                <div class="card accent"><p style="font-size: clamp(16px, 3.5vw, 25px); color: #e8f2ff; margin: 0;">Insira clientes para registrar vendas.</p></div>
+                <div class="code-wrap" style="margin-top: clamp(14px, 2.5vh, 22px);"><button class="copy">Copiar</button><pre><code>INSERT INTO cliente (nome, cpf, telefone, email, cidade)
 VALUES
-('Ana Clara Souza', '111.111.111-11', '(31) 99999-1111', 'ana.souza@email.com', 'Ibirité'),
-('Bruno Henrique Lima', '222.222.222-22', '(31) 99999-2222', 'bruno.lima@email.com', 'Contagem'),
-('Carla Mendes Rocha', '333.333.333-33', '(31) 99999-3333', 'carla.rocha@email.com', 'Belo Horizonte'),
-('Diego Martins Alves', '444.444.444-44', '(31) 99999-4444', 'diego.alves@email.com', 'Ibirité'),
-('Fernanda Oliveira Costa', '555.555.555-55', '(31) 99999-5555', 'fernanda.costa@email.com', 'Betim');</code></pre></div>
-</section>
+('Ana Clara Souza', '111.111.111-11', '(31) 99999-1111', 'ana@email.com', 'Ibirité'),
+('Bruno Henrique', '222.222.222-22', '(31) 99999-2222', 'bruno@email.com', 'Contagem'),
+('Carla Mendes', '333.333.333-33', '(31) 99999-3333', 'carla@email.com', 'BH'),
+('Diego Martins', '444.444.444-44', '(31) 99999-4444', 'diego@email.com', 'Ibirité'),
+('Fernanda Costa', '555.555.555-55', '(31) 99999-5555', 'fernanda@email.com', 'Betim');</code></pre></div>
+            </section>
 
-<section class="slide">
-  <h2>Atividade 10 - Inserir produtos</h2>
-  <div class="card accent"><p class="task-box">Insira produtos relacionados às categorias cadastradas.</p></div>
-  <ul>
-    <li>Cada produto deve apontar para uma categoria existente.</li>
-    <li>Preencha preço de custo, preço de venda, estoque atual e estoque mínimo.</li>
-  </ul>
-</section>
-
-<section class="slide compact">
-  <h2>Resposta 10 - Inserir produtos</h2>
-  <div class="code-wrap"><button class="copy">Copiar</button><pre><code>INSERT INTO produto
-(nome_produto, codigo_barras, id_categoria, preco_custo, preco_venda, estoque_atual, estoque_minimo, ativo)
+            <section class="slide">
+                <h2>📦 Inserindo produtos</h2>
+                <div class="card accent"><p style="font-size: clamp(16px, 3.5vw, 25px); color: #e8f2ff; margin: 0;">Insira produtos relacionados às categorias.</p></div>
+                <div class="code-wrap" style="margin-top: clamp(14px, 2.5vh, 22px);"><button class="copy">Copiar</button><pre><code>INSERT INTO produto (nome_produto, codigo_barras, id_categoria, preco_custo, preco_venda, estoque_atual)
 VALUES
-('Arroz Tipo 1 - 5kg', '789100000001', 1, 20.00, 28.00, 50, 10, 'S'),
-('Feijão Carioca - 1kg', '789100000002', 1, 6.50, 9.90, 80, 15, 'S'),
-('Café Tradicional - 500g', '789100000003', 1, 12.00, 18.00, 60, 10, 'S'),
-('Refrigerante Cola - 2L', '789100000004', 2, 5.00, 8.50, 40, 8, 'S'),
-('Sabonete Neutro - 90g', '789100000005', 3, 2.00, 3.50, 100, 20, 'S'),
-('Detergente Líquido - 500ml', '789100000006', 4, 1.80, 3.20, 90, 20, 'S'),
-('Caderno Universitário 10 Matérias', '789100000007', 5, 8.00, 14.90, 30, 5, 'S'),
-('Caneta Azul Esferográfica', '789100000008', 5, 0.80, 1.50, 200, 50, 'S');</code></pre></div>
-</section>
+('Arroz Tipo 1 - 5kg', '789100000001', 1, 20.00, 28.00, 50),
+('Feijão Carioca - 1kg', '789100000002', 1, 6.50, 9.90, 80),
+('Café - 500g', '789100000003', 1, 12.00, 18.00, 60),
+('Refrigerante Cola - 2L', '789100000004', 2, 5.00, 8.50, 40),
+('Sabonete Neutro - 90g', '789100000005', 3, 2.00, 3.50, 100),
+('Detergente - 500ml', '789100000006', 4, 1.80, 3.20, 90);</code></pre></div>
+            </section>
 
-<section class="slide">
-  <h2>Atividade 11 - Inserir vendas</h2>
-  <div class="card accent"><p class="task-box">Cadastre algumas vendas vinculando cada venda a um cliente já cadastrado.</p></div>
-  <ul>
-    <li>Use o ID do cliente.</li>
-    <li>Informe data, valor total, forma da venda e status.</li>
-  </ul>
-</section>
-
-<section class="slide compact">
-  <h2>Resposta 11 - Inserir vendas</h2>
-  <div class="code-wrap"><button class="copy">Copiar</button><pre><code>INSERT INTO venda
-(id_cliente, data_venda, valor_total, forma_venda, status_venda)
+            <section class="slide">
+                <h2>🛒 Inserindo vendas</h2>
+                <div class="card accent"><p style="font-size: clamp(16px, 3.5vw, 25px); color: #e8f2ff; margin: 0;">Cadastre vendas vinculadas aos clientes.</p></div>
+                <div class="code-wrap" style="margin-top: clamp(14px, 2.5vh, 22px);"><button class="copy">Copiar</button><pre><code>INSERT INTO venda (id_cliente, data_venda, valor_total, forma_venda)
 VALUES
-(1, '2026-06-05', 85.70, 'Presencial', 'Finalizada'),
-(2, '2026-06-05', 70.00, 'Presencial', 'Finalizada'),
-(3, '2026-06-06', 27.10, 'Online', 'Finalizada'),
-(4, '2026-06-06', 44.80, 'Presencial', 'Finalizada'),
-(5, '2026-06-07', 63.00, 'Online', 'Finalizada');</code></pre></div>
-</section>
+(1, '2026-06-05', 85.70, 'Presencial'),
+(2, '2026-06-05', 70.00, 'Presencial'),
+(3, '2026-06-06', 27.10, 'Online'),
+(4, '2026-06-06', 44.80, 'Presencial'),
+(5, '2026-06-07', 63.00, 'Online');</code></pre></div>
+            </section>
 
-<section class="slide">
-  <h2>Atividade 12 - Inserir itens das vendas</h2>
-  <div class="card accent"><p class="task-box">Registre os produtos vendidos dentro de cada venda.</p></div>
-  <ul>
-    <li>Informe o ID da venda.</li>
-    <li>Informe o ID do produto.</li>
-    <li>Informe quantidade, valor unitário, desconto e subtotal.</li>
-  </ul>
-</section>
+            <section class="slide">
+                <h2>✏️ Atividade - Consultas básicas</h2>
+                <div class="card blue"><h3>Próximos passos</h3><p style="margin-bottom: 12px;">Vamos fazer consultas para extrair informações dos dados inseridos:</p>
+                <ul>
+                    <li>Listar todos os clientes</li>
+                    <li>Filtrar clientes por cidade</li>
+                    <li>Contar quantos clientes existem</li>
+                    <li>Somar total das vendas</li>
+                    <li>Listar produtos com seus preços</li>
+                    <li>Fazer JOINs entre tabelas</li>
+                </ul>
+                </div>
+            </section>
 
-<section class="slide compact">
-  <h2>Resposta 12 - Inserir itens das vendas</h2>
-  <div class="code-wrap"><button class="copy">Copiar</button><pre><code>INSERT INTO item_venda
-(id_venda, id_produto, quantidade, valor_unitario, desconto, subtotal)
-VALUES
-(1, 1, 2, 28.00, 0.00, 56.00),
-(1, 2, 3, 9.90, 0.00, 29.70),
-(2, 3, 2, 18.00, 0.00, 36.00),
-(2, 4, 4, 8.50, 0.00, 34.00),
-(3, 5, 5, 3.50, 0.00, 17.50),
-(3, 6, 3, 3.20, 0.00, 9.60),
-(4, 7, 2, 14.90, 0.00, 29.80),
-(4, 8, 10, 1.50, 0.00, 15.00),
-(5, 1, 1, 28.00, 0.00, 28.00),
-(5, 3, 1, 18.00, 0.00, 18.00),
-(5, 4, 2, 8.50, 0.00, 17.00);</code></pre></div>
-</section>
-
-<section class="slide">
-  <h2>Atividade 13 - Consultar todos os clientes</h2>
-  <div class="card accent"><p class="task-box">Faça uma consulta para listar todos os registros da tabela <b>cliente</b>.</p></div>
-  <p>Essa consulta serve para conferir se os dados foram inseridos corretamente.</p>
-</section>
-
-<section class="slide compact">
-  <h2>Resposta 13 - Consultar todos os clientes</h2>
-  <div class="code-wrap"><button class="copy">Copiar</button><pre><code>SELECT *
+            <section class="slide">
+                <h2>SELECT - Listar clientes</h2>
+                <div class="card accent"><p style="font-size: clamp(16px, 3.5vw, 25px); color: #e8f2ff; margin: 0;">Liste <strong>todos os clientes</strong> da tabela.</p></div>
+                <div class="code-wrap" style="margin-top: clamp(14px, 2.5vh, 22px);"><button class="copy">Copiar</button><pre><code>SELECT *
 FROM cliente;</code></pre></div>
-</section>
+                <p style="margin-top: clamp(12px, 2vh, 16px); font-size: clamp(14px, 2.5vw, 16px); color: var(--muted);">💡 O * significa "todas as colunas". Para trazer apenas algumas colunas, liste os nomes delas.</p>
+            </section>
 
-<section class="slide">
-  <h2>Atividade 14 - Consultar produtos com colunas específicas</h2>
-  <div class="card accent"><p class="task-box">Liste apenas o nome do produto, preço de venda e estoque atual.</p></div>
-  <p>A ideia é não trazer todas as colunas, apenas as mais importantes para conferência.</p>
-</section>
-
-<section class="slide compact">
-  <h2>Resposta 14 - Produtos com colunas específicas</h2>
-  <div class="code-wrap"><button class="copy">Copiar</button><pre><code>SELECT 
+            <section class="slide">
+                <h2>SELECT - Colunas específicas</h2>
+                <div class="card accent"><p style="font-size: clamp(16px, 3.5vw, 25px); color: #e8f2ff; margin: 0;">Liste <strong>nome, preço de venda e estoque</strong> dos produtos.</p></div>
+                <div class="code-wrap" style="margin-top: clamp(14px, 2.5vh, 22px);"><button class="copy">Copiar</button><pre><code>SELECT 
     nome_produto,
     preco_venda,
     estoque_atual
 FROM produto;</code></pre></div>
-</section>
+            </section>
 
-<section class="slide">
-  <h2>Atividade 15 - Filtrar clientes por cidade</h2>
-  <div class="card accent"><p class="task-box">Liste os clientes que moram na cidade de <b>Ibirité</b>.</p></div>
-  <p>Use uma condição para filtrar apenas os registros desejados.</p>
-</section>
-
-<section class="slide compact">
-  <h2>Resposta 15 - Filtrar clientes por cidade</h2>
-  <div class="code-wrap"><button class="copy">Copiar</button><pre><code>SELECT 
+            <section class="slide">
+                <h2>WHERE - Filtrar por cidade</h2>
+                <div class="card accent"><p style="font-size: clamp(16px, 3.5vw, 25px); color: #e8f2ff; margin: 0;">Liste clientes que moram em <strong>Ibirité</strong>.</p></div>
+                <div class="code-wrap" style="margin-top: clamp(14px, 2.5vh, 22px);"><button class="copy">Copiar</button><pre><code>SELECT 
     nome,
     telefone,
     cidade
 FROM cliente
 WHERE cidade = 'Ibirité';</code></pre></div>
-</section>
+            </section>
 
-<section class="slide">
-  <h2>Atividade 16 - Filtrar produtos por preço</h2>
-  <div class="card accent"><p class="task-box">Liste os produtos com preço de venda maior ou igual a R$ 10,00.</p></div>
-  <p>Essa consulta ajuda o comércio a visualizar produtos de maior valor.</p>
-</section>
-
-<section class="slide compact">
-  <h2>Resposta 16 - Produtos por preço</h2>
-  <div class="code-wrap"><button class="copy">Copiar</button><pre><code>SELECT 
+            <section class="slide">
+                <h2>WHERE - Filtrar por preço</h2>
+                <div class="card accent"><p style="font-size: clamp(16px, 3.5vw, 25px); color: #e8f2ff; margin: 0;">Liste produtos com preço de venda <strong>≥ R$ 10,00</strong>.</p></div>
+                <div class="code-wrap" style="margin-top: clamp(14px, 2.5vh, 22px);"><button class="copy">Copiar</button><pre><code>SELECT 
     nome_produto,
     preco_venda
 FROM produto
 WHERE preco_venda >= 10.00;</code></pre></div>
-</section>
+            </section>
 
-<section class="slide">
-  <h2>Atividade 17 - Ordenar produtos pelo preço</h2>
-  <div class="card accent"><p class="task-box">Liste os produtos do maior para o menor preço de venda.</p></div>
-  <div class="row" style="margin-top:22px">
-    <div class="card blue">
-      <h3>O que o aluno precisa pensar</h3>
-      <ul>
-        <li>Qual tabela guarda os produtos?</li>
-        <li>Quais colunas devem aparecer no resultado?</li>
-        <li>Qual coluna será usada para organizar a lista?</li>
-        <li>A ordem será crescente ou decrescente?</li>
-      </ul>
-    </div>
-    <div class="card warn">
-      <h3>Dica didática</h3>
-      <p><b>ORDER BY</b> organiza o resultado. <b>DESC</b> mostra do maior para o menor. Neste caso, o preço mais alto deve aparecer primeiro.</p>
-    </div>
-  </div>
-</section>
-
-<section class="slide compact">
-  <h2>Resposta 17 - Ordenar produtos pelo preço</h2>
-  <div class="two-col" style="grid-template-columns:58% 42%;gap:22px;flex:1;min-height:0">
-    <div class="code-wrap"><button class="copy">Copiar</button><pre><code>SELECT 
+            <section class="slide">
+                <h2>ORDER BY - Ordenar resultados</h2>
+                <div class="card accent"><p style="font-size: clamp(16px, 3.5vw, 25px); color: #e8f2ff; margin: 0;">Liste produtos do <strong>maior para o menor preço</strong>.</p></div>
+                <div class="code-wrap" style="margin-top: clamp(14px, 2.5vh, 22px);"><button class="copy">Copiar</button><pre><code>SELECT 
     nome_produto,
     preco_venda
 FROM produto
 ORDER BY preco_venda DESC;</code></pre></div>
-    <div class="card blue">
-      <h3>Entenda o comando</h3>
-      <ul>
-        <li><b>SELECT</b> escolhe as colunas que serão exibidas.</li>
-        <li><b>FROM produto</b> informa de qual tabela os dados serão buscados.</li>
-        <li><b>ORDER BY preco_venda</b> ordena pelo preço de venda.</li>
-        <li><b>DESC</b> significa ordem decrescente: maior para menor.</li>
-      </ul>
-    </div>
-  </div>
-</section>
+                <p style="margin-top: clamp(12px, 2vh, 16px); font-size: clamp(14px, 2.5vw, 16px); color: var(--muted);">💡 DESC = decrescente (maior para menor). ASC = ascendente (menor para maior).</p>
+            </section>
 
-<section class="slide">
-  <h2>Atividade 18 - Contar clientes cadastrados</h2>
-  <div class="card accent"><p class="task-box">Faça uma consulta para contar quantos clientes existem cadastrados.</p></div>
-  <div class="row" style="margin-top:22px">
-    <div class="card blue">
-      <h3>O que deve ser respondido</h3>
-      <p>A consulta não precisa mostrar o nome de cada cliente. Ela deve retornar apenas um número: o total de registros cadastrados na tabela de clientes.</p>
-    </div>
-    <div class="card warn">
-      <h3>Dica didática</h3>
-      <p>A função <b>COUNT(*)</b> conta linhas. Se existem 6 clientes na tabela, o resultado será 6.</p>
-    </div>
-  </div>
-</section>
-
-<section class="slide compact">
-  <h2>Resposta 18 - Contar clientes</h2>
-  <div class="two-col" style="grid-template-columns:58% 42%;gap:22px;flex:1;min-height:0">
-    <div class="code-wrap"><button class="copy">Copiar</button><pre><code>SELECT COUNT(*) AS total_clientes
+            <section class="slide">
+                <h2>COUNT - Contar registros</h2>
+                <div class="card accent"><p style="font-size: clamp(16px, 3.5vw, 25px); color: #e8f2ff; margin: 0;"><strong>Quantos clientes</strong> estão cadastrados?</p></div>
+                <div class="code-wrap" style="margin-top: clamp(14px, 2.5vh, 22px);"><button class="copy">Copiar</button><pre><code>SELECT COUNT(*) AS total_clientes
 FROM cliente;</code></pre></div>
-    <div class="card blue">
-      <h3>Entenda o comando</h3>
-      <ul>
-        <li><b>COUNT(*)</b> conta todas as linhas encontradas.</li>
-        <li><b>AS total_clientes</b> dá um nome amigável para a coluna do resultado.</li>
-        <li><b>FROM cliente</b> indica que a contagem será feita na tabela cliente.</li>
-      </ul>
-    </div>
-  </div>
-</section>
+                <p style="margin-top: clamp(12px, 2vh, 16px); font-size: clamp(14px, 2.5vw, 16px); color: var(--muted);">💡 AS renomeia a coluna no resultado. COUNT(*) conta todas as linhas.</p>
+            </section>
 
-<section class="slide">
-  <h2>Atividade 19 - Somar o total das vendas</h2>
-  <div class="card accent"><p class="task-box">Some o valor total de todas as vendas cadastradas.</p></div>
-  <div class="row" style="margin-top:22px">
-    <div class="card blue">
-      <h3>O que deve ser respondido</h3>
-      <p>A consulta deve gerar um relatório simples de faturamento, somando todos os valores registrados na coluna <b>valor_total</b>.</p>
-    </div>
-    <div class="card warn">
-      <h3>Dica didática</h3>
-      <p>A função <b>SUM()</b> soma valores numéricos. Ela é muito usada em relatórios de vendas, compras, estoque e financeiro.</p>
-    </div>
-  </div>
-</section>
-
-<section class="slide compact">
-  <h2>Resposta 19 - Somar vendas</h2>
-  <div class="two-col" style="grid-template-columns:58% 42%;gap:22px;flex:1;min-height:0">
-    <div class="code-wrap"><button class="copy">Copiar</button><pre><code>SELECT SUM(valor_total) AS total_vendido
+            <section class="slide">
+                <h2>SUM - Somar valores</h2>
+                <div class="card accent"><p style="font-size: clamp(16px, 3.5vw, 25px); color: #e8f2ff; margin: 0;">Qual é o <strong>faturamento total</strong> de todas as vendas?</p></div>
+                <div class="code-wrap" style="margin-top: clamp(14px, 2.5vh, 22px);"><button class="copy">Copiar</button><pre><code>SELECT SUM(valor_total) AS total_vendido
 FROM venda;</code></pre></div>
-    <div class="card blue">
-      <h3>Entenda o comando</h3>
-      <ul>
-        <li><b>SUM(valor_total)</b> soma todos os valores da coluna valor_total.</li>
-        <li><b>AS total_vendido</b> define o nome da coluna calculada.</li>
-        <li><b>FROM venda</b> mostra que a soma será feita com base nas vendas.</li>
-      </ul>
-    </div>
-  </div>
-</section>
+                <p style="margin-top: clamp(12px, 2vh, 16px); font-size: clamp(14px, 2.5vw, 16px); color: var(--muted);">💡 SUM() soma valores numéricos. Muito usado em relatórios financeiros.</p>
+            </section>
 
-<section class="slide">
-  <h2>Atividade 20 - Agrupar clientes por cidade</h2>
-  <div class="card accent"><p class="task-box">Conte quantos clientes existem em cada cidade.</p></div>
-  <div class="row" style="margin-top:22px">
-    <div class="card blue">
-      <h3>O que significa agrupar?</h3>
-      <p>Agrupar é juntar registros que possuem a mesma informação. Aqui, todos os clientes de <b>Ibirité</b> ficam em um grupo, os de <b>Betim</b> em outro, e assim por diante.</p>
-    </div>
-    <div class="card warn">
-      <h3>Dica didática</h3>
-      <p>Quando usamos <b>GROUP BY cidade</b>, o MySQL forma grupos por cidade. Depois, o <b>COUNT(*)</b> conta quantos clientes existem em cada grupo.</p>
-    </div>
-  </div>
-</section>
-
-<section class="slide compact">
-  <h2>Resposta 20 - Clientes por cidade</h2>
-  <div class="two-col" style="grid-template-columns:58% 42%;gap:22px;flex:1;min-height:0">
-    <div class="code-wrap"><button class="copy">Copiar</button><pre><code>SELECT 
+            <section class="slide">
+                <h2>GROUP BY - Agrupar dados</h2>
+                <div class="card accent"><p style="font-size: clamp(16px, 3.5vw, 25px); color: #e8f2ff; margin: 0;"><strong>Quantos clientes</strong> existem em cada cidade?</p></div>
+                <div class="code-wrap" style="margin-top: clamp(14px, 2.5vh, 22px);"><button class="copy">Copiar</button><pre><code>SELECT 
     cidade,
     COUNT(*) AS quantidade_clientes
 FROM cliente
 GROUP BY cidade
 ORDER BY quantidade_clientes DESC;</code></pre></div>
-    <div class="card blue">
-      <h3>Entenda o comando</h3>
-      <ul>
-        <li><b>cidade</b> aparece no resultado porque será o campo de agrupamento.</li>
-        <li><b>COUNT(*)</b> conta quantos clientes existem em cada cidade.</li>
-        <li><b>GROUP BY cidade</b> separa os registros por cidade.</li>
-        <li><b>ORDER BY ... DESC</b> mostra primeiro a cidade com mais clientes.</li>
-      </ul>
-    </div>
-  </div>
-</section>
+                <p style="margin-top: clamp(12px, 2vh, 16px); font-size: clamp(14px, 2.5vw, 16px); color: var(--muted);">💡 GROUP BY agrupa registros pela cidade. COUNT conta quantos há em cada grupo.</p>
+            </section>
 
-<section class="slide">
-  <h2>Atividade 21 - JOIN entre produto e categoria</h2>
-  <div class="card accent"><p class="task-box">Liste os produtos mostrando também o nome da categoria de cada um.</p></div>
-  <div class="row" style="margin-top:22px">
-    <div class="card blue">
-      <h3>Por que precisa de JOIN?</h3>
-      <p>Na tabela <b>produto</b>, não guardamos o nome da categoria. Guardamos apenas o código <b>id_categoria</b>. O nome da categoria está em outra tabela: <b>categoria</b>.</p>
-    </div>
-    <div class="card warn">
-      <h3>Raciocínio da consulta</h3>
-      <ul>
-        <li>Pegar os dados do produto.</li>
-        <li>Ir até a tabela categoria.</li>
-        <li>Ligar as duas pelo campo <b>id_categoria</b>.</li>
-        <li>Mostrar o produto junto com o nome da categoria.</li>
-      </ul>
-    </div>
-  </div>
-</section>
-
-<section class="slide compact">
-  <h2>Resposta 21 - Produto com categoria</h2>
-  <div class="two-col" style="grid-template-columns:58% 42%;gap:22px;flex:1;min-height:0">
-    <div class="code-wrap"><button class="copy">Copiar</button><pre><code>SELECT 
+            <section class="slide">
+                <h2>JOIN - Produto com Categoria</h2>
+                <div class="card accent"><p style="font-size: clamp(16px, 3.5vw, 25px); color: #e8f2ff; margin: 0;">Liste produtos <strong>mostrando a categoria de cada um</strong>.</p></div>
+                <div class="code-wrap" style="margin-top: clamp(14px, 2.5vh, 22px);"><button class="copy">Copiar</button><pre><code>SELECT 
     p.nome_produto AS `Produto`,
-    p.preco_venda AS `Preço de Venda`,
+    p.preco_venda AS `Preço`,
     c.nome_categoria AS `Categoria`
 FROM produto AS p
 INNER JOIN categoria AS c
     ON p.id_categoria = c.id_categoria
-ORDER BY c.nome_categoria, p.nome_produto;</code></pre></div>
-    <div class="card blue">
-      <h3>Entenda o JOIN</h3>
-      <ul>
-        <li><b>produto AS p</b>: apelido curto para a tabela produto.</li>
-        <li><b>categoria AS c</b>: apelido curto para a tabela categoria.</li>
-        <li><b>INNER JOIN</b> une registros que possuem relação nas duas tabelas.</li>
-        <li><b>ON p.id_categoria = c.id_categoria</b> é a condição da ligação.</li>
-        <li>Sem o <b>ON</b>, o banco não sabe como conectar produto e categoria.</li>
-      </ul>
-    </div>
-  </div>
-</section>
+ORDER BY c.nome_categoria;</code></pre></div>
+                <p style="margin-top: clamp(12px, 2vh, 16px); font-size: clamp(14px, 2.5vw, 16px); color: var(--muted);">💡 O ON (p.id_categoria = c.id_categoria) é a "cola" que conecta as tabelas.</p>
+            </section>
 
-<section class="slide">
-  <h2>Atividade 22 - JOIN entre venda e cliente</h2>
-  <div class="card accent"><p class="task-box">Liste as vendas mostrando o nome do cliente, a data da venda e o valor total.</p></div>
-  <div class="row" style="margin-top:22px">
-    <div class="card blue">
-      <h3>Por que precisa de JOIN?</h3>
-      <p>A tabela <b>venda</b> guarda o código do cliente em <b>id_cliente</b>, mas o nome do cliente está na tabela <b>cliente</b>.</p>
-    </div>
-    <div class="card warn">
-      <h3>Raciocínio da consulta</h3>
-      <ul>
-        <li>A venda informa que alguém comprou.</li>
-        <li>O campo <b>id_cliente</b> informa quem comprou.</li>
-        <li>O JOIN busca o nome desse cliente na tabela cliente.</li>
-        <li>O resultado fica mais legível para o usuário.</li>
-      </ul>
-    </div>
-  </div>
-</section>
-
-<section class="slide compact">
-  <h2>Resposta 22 - Venda com cliente</h2>
-  <div class="two-col" style="grid-template-columns:58% 42%;gap:22px;flex:1;min-height:0">
-    <div class="code-wrap"><button class="copy">Copiar</button><pre><code>SELECT 
-    v.id_venda AS `Código da Venda`,
+            <section class="slide">
+                <h2>JOIN - Venda com Cliente</h2>
+                <div class="card accent"><p style="font-size: clamp(16px, 3.5vw, 25px); color: #e8f2ff; margin: 0;">Liste vendas mostrando <strong>o nome do cliente</strong> em cada venda.</p></div>
+                <div class="code-wrap" style="margin-top: clamp(14px, 2.5vh, 22px);"><button class="copy">Copiar</button><pre><code>SELECT 
+    v.id_venda AS `Venda`,
     c.nome AS `Cliente`,
-    v.data_venda AS `Data da Venda`,
-    v.valor_total AS `Valor Total`
+    v.data_venda AS `Data`,
+    v.valor_total AS `Total`
 FROM venda AS v
 INNER JOIN cliente AS c
     ON v.id_cliente = c.id_cliente
-ORDER BY v.data_venda, c.nome;</code></pre></div>
-    <div class="card blue">
-      <h3>Entenda o JOIN</h3>
-      <ul>
-        <li><b>FROM venda AS v</b>: a consulta começa pela tabela venda.</li>
-        <li><b>INNER JOIN cliente AS c</b>: adiciona a tabela cliente à consulta.</li>
-        <li><b>ON v.id_cliente = c.id_cliente</b>: liga cada venda ao seu cliente.</li>
-        <li>O resultado mostra dados da venda e dados do cliente na mesma tela.</li>
-      </ul>
-    </div>
-  </div>
-</section>
+ORDER BY v.data_venda;</code></pre></div>
+            </section>
 
-<section class="slide">
-  <h2>Atividade 23 - JOIN completo de vendas</h2>
-  <div class="card accent"><p class="task-box">Liste cliente, venda, produto, quantidade e subtotal de cada item vendido.</p></div>
-  <div class="row" style="margin-top:22px">
-    <div class="card blue">
-      <h3>O caminho dos dados</h3>
-      <p>Uma venda não possui diretamente o nome dos produtos. Primeiro ligamos <b>venda</b> com <b>cliente</b>, depois <b>venda</b> com <b>item_venda</b>, e por fim <b>item_venda</b> com <b>produto</b>.</p>
-    </div>
-    <div class="card warn">
-      <h3>Mapa mental do JOIN</h3>
-      <ul>
-        <li><b>venda</b> → registra a venda.</li>
-        <li><b>cliente</b> → informa quem comprou.</li>
-        <li><b>item_venda</b> → informa quais itens foram vendidos.</li>
-        <li><b>produto</b> → informa o nome do produto.</li>
-      </ul>
-    </div>
-  </div>
-</section>
-
-<section class="slide compact">
-  <h2>Resposta 23 - Consulta completa de vendas</h2>
-  <div class="two-col" style="grid-template-columns:60% 40%;gap:22px;flex:1;min-height:0">
-    <div class="code-wrap"><button class="copy">Copiar</button><pre><code>SELECT 
+            <section class="slide">
+                <h2>JOIN Completo - Vendas com Detalhes</h2>
+                <div class="card accent"><p style="font-size: clamp(16px, 3.5vw, 25px); color: #e8f2ff; margin: 0;">Liste <strong>cliente, venda, produto, quantidade e subtotal</strong> de cada item.</p></div>
+                <div class="code-wrap" style="margin-top: clamp(14px, 2.5vh, 22px);"><button class="copy">Copiar</button><pre><code>SELECT 
     c.nome AS `Cliente`,
-    v.id_venda AS `Código da Venda`,
-    v.data_venda AS `Data da Venda`,
+    v.id_venda AS `Venda`,
     p.nome_produto AS `Produto`,
-    iv.quantidade AS `Quantidade`,
-    iv.valor_unitario AS `Valor Unitário`,
+    iv.quantidade AS `Qtd`,
     iv.subtotal AS `Subtotal`
 FROM venda AS v
 INNER JOIN cliente AS c
@@ -753,72 +967,183 @@ INNER JOIN item_venda AS iv
     ON v.id_venda = iv.id_venda
 INNER JOIN produto AS p
     ON iv.id_produto = p.id_produto
-ORDER BY c.nome, v.id_venda, p.nome_produto;</code></pre></div>
-    <div class="card blue">
-      <h3>Entenda o caminho</h3>
-      <ul>
-        <li><b>venda → cliente:</b> descobre quem fez a compra.</li>
-        <li><b>venda → item_venda:</b> descobre quais itens pertencem à venda.</li>
-        <li><b>item_venda → produto:</b> descobre o nome do produto vendido.</li>
-        <li><b>SELECT</b> escolhe o que será mostrado no relatório final.</li>
-        <li><b>ORDER BY</b> organiza por cliente, venda e produto.</li>
-      </ul>
+ORDER BY c.nome, v.id_venda;</code></pre></div>
+            </section>
+
+            <section class="slide center">
+                <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+                    <h2 style="margin-bottom: clamp(16px, 3vh, 32px);">🎓 Conclusão</h2>
+                    <div class="row3" style="max-width: 100%; margin: 0;">
+                        <div class="card accent"><h3>O banco organiza</h3><p>As tabelas separam cada tipo de informação.</p></div>
+                        <div class="card blue"><h3>Relacionamento conecta</h3><p>As chaves ligam cliente, venda e produto.</p></div>
+                        <div class="card warn"><h3>SELECT revela</h3><p>As consultas transformam dados em informação.</p></div>
+                    </div>
+                    <p class="lead" style="margin-top: clamp(24px, 4vh, 40px); max-width: 600px;">Quando você entende o relacionamento entre tabelas, deixa de decorar comandos e passa a compreender como um sistema real funciona! 🚀</p>
+                </div>
+            </section>
+        </div>
+
+        <div class="footer">
+            <span>Controle de Compras e Vendas • MySQL • FIC|PRONATEC|FHA/ESSA</span>
+            <span style="display: none;" id="slideTime"></span>
+        </div>
+        <div class="progress" id="progress"></div>
+
+        <div class="nav">
+            <button id="prevBtn" aria-label="Slide anterior">◀</button>
+            <button id="nextBtn" aria-label="Próximo slide">▶</button>
+        </div>
     </div>
-  </div>
-</section>
 
-<section class="slide">
-  <h2>Fechamento da aula</h2>
-  <div class="row3">
-    <div class="card accent"><h3>O banco organiza</h3><p>As tabelas separam corretamente cada tipo de informação.</p></div>
-    <div class="card blue"><h3>O relacionamento conecta</h3><p>As chaves ligam cliente, venda, item e produto.</p></div>
-    <div class="card warn"><h3>O SELECT revela</h3><p>As consultas transformam dados em informação útil.</p></div>
-  </div>
-  <div class="card" style="margin-top:26px"><p class="lead">Quando o aluno entende o relacionamento entre tabelas, ele deixa de apenas decorar comandos e passa a compreender como um sistema real funciona.</p></div>
-</section>
+    <script>
+        const slides = [...document.querySelectorAll('.slide')];
+        const slideNo = document.getElementById('slideNo');
+        const progress = document.getElementById('progress');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const slidesContainer = document.getElementById('slidesContainer');
 
-<div class="footer"><span>Controle de Compras e Vendas • MySQL • FIC|PRONATEC|FHA/ESSA</span><span class="slide-no" id="slideNo">1 / 1</span></div>
-<div class="progress" id="progress"></div>
-<div class="nav"><button id="prev">◀</button><button id="next">▶</button></div>
-</div>
+        let currentIndex = 0;
+        let touchStartX = 0;
+        let touchEndX = 0;
 
-<script>
-const slides=[...document.querySelectorAll('.slide')];
-let idx=0;
-const slideNo=document.getElementById('slideNo');
-const progress=document.getElementById('progress');
-function show(i){
-  idx=Math.max(0,Math.min(slides.length-1,i));
-  slides.forEach((s,n)=>s.classList.toggle('active',n===idx));
-  slideNo.textContent=(idx+1)+' / '+slides.length;
-  progress.style.width=((idx+1)/slides.length*100)+'%';
-  location.hash='slide-'+(idx+1);
-}
-document.getElementById('next').onclick=()=>show(idx+1);
-document.getElementById('prev').onclick=()=>show(idx-1);
-document.addEventListener('keydown',e=>{
-  if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();show(idx+1)}
-  if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();show(idx-1)}
-  if(e.key==='Home')show(0);
-  if(e.key==='End')show(slides.length-1);
-  if(e.key.toLowerCase()==='f'){
-    if(!document.fullscreenElement)document.documentElement.requestFullscreen();
-    else document.exitFullscreen();
-  }
-});
-document.querySelectorAll('.copy').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    const code=btn.parentElement.querySelector('code').innerText;
-    navigator.clipboard.writeText(code).then(()=>{
-      const old=btn.innerText;btn.innerText='Copiado!';setTimeout(()=>btn.innerText=old,1200);
-    });
-  });
-});
-if(location.hash.startsWith('#slide-')){
-  const n=parseInt(location.hash.replace('#slide-',''),10);
-  if(!Number.isNaN(n)) idx=n-1;
-}
-show(idx);
-</script>
+        /**
+         * Atualiza a exibição do slide com animações suaves
+         */
+        function showSlide(newIndex) {
+            newIndex = Math.max(0, Math.min(slides.length - 1, newIndex));
+
+            if (newIndex === currentIndex) return;
+
+            // Anima o slide atual para fora
+            slides[currentIndex].classList.add('prev');
+            slides[currentIndex].classList.remove('active');
+
+            // Aguarda a animação e exibe o novo slide
+            setTimeout(() => {
+                slides[currentIndex].classList.remove('prev');
+                slides[newIndex].classList.add('active');
+                currentIndex = newIndex;
+
+                // Atualiza indicadores
+                updateIndicators();
+            }, 50);
+        }
+
+        /**
+         * Atualiza número do slide e barra de progresso
+         */
+        function updateIndicators() {
+            slideNo.textContent = `${currentIndex + 1} / ${slides.length}`;
+            progress.style.width = `${((currentIndex + 1) / slides.length) * 100}%`;
+
+            // Desabilita botões nas extremidades
+            prevBtn.disabled = currentIndex === 0;
+            nextBtn.disabled = currentIndex === slides.length - 1;
+        }
+
+        /**
+         * Navegação por botões
+         */
+        prevBtn.addEventListener('click', () => showSlide(currentIndex - 1));
+        nextBtn.addEventListener('click', () => showSlide(currentIndex + 1));
+
+        /**
+         * Navegação por teclado
+         */
+        document.addEventListener('keydown', (e) => {
+            if (['ArrowRight', 'PageDown', ' '].includes(e.key)) {
+                e.preventDefault();
+                showSlide(currentIndex + 1);
+            }
+            if (['ArrowLeft', 'PageUp'].includes(e.key)) {
+                e.preventDefault();
+                showSlide(currentIndex - 1);
+            }
+            if (e.key === 'Home') showSlide(0);
+            if (e.key === 'End') showSlide(slides.length - 1);
+            if (e.key.toLowerCase() === 'f') {
+                e.preventDefault();
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen().catch(() => {});
+                } else {
+                    document.exitFullscreen();
+                }
+            }
+        });
+
+        /**
+         * Navegação por swipe (gestos touch)
+         */
+        slidesContainer.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].clientX;
+        });
+
+        slidesContainer.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].clientX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            const difference = touchStartX - touchEndX;
+
+            if (Math.abs(difference) > swipeThreshold) {
+                if (difference > 0) {
+                    // Swipe para a esquerda = próximo slide
+                    showSlide(currentIndex + 1);
+                } else {
+                    // Swipe para a direita = slide anterior
+                    showSlide(currentIndex - 1);
+                }
+            }
+        }
+
+        /**
+         * Botão Copiar código
+         */
+        document.querySelectorAll('.copy').forEach((btn) => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const code = btn.parentElement.querySelector('code').innerText;
+                navigator.clipboard.writeText(code).then(() => {
+                    const originalText = btn.innerText;
+                    btn.innerText = '✓ Copiado!';
+                    setTimeout(() => {
+                        btn.innerText = originalText;
+                    }, 1500);
+                }).catch(() => {
+                    btn.innerText = '✗ Erro ao copiar';
+                    setTimeout(() => {
+                        btn.innerText = '📋 Copiar';
+                    }, 1500);
+                });
+            });
+        });
+
+        /**
+         * Inicialização
+         */
+        function init() {
+            // Suporta navegação por URL hash
+            if (location.hash.startsWith('#slide-')) {
+                const n = parseInt(location.hash.replace('#slide-', ''), 10);
+                if (!Number.isNaN(n) && n > 0) {
+                    currentIndex = Math.min(n - 1, slides.length - 1);
+                }
+            }
+
+            // Exibe o primeiro slide
+            slides[currentIndex].classList.add('active');
+            updateIndicators();
+
+            // Previne comportamentos padrão do navegador
+            document.addEventListener('touchmove', (e) => {
+                if (e.target.closest('pre')) return;
+            }, { passive: true });
+        }
+
+        init();
+    </script>
 </body>
 </html>
